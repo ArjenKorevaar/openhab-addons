@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<thing:thing-descriptions bindingId="raspberrypipwm"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:thing="https://openhab.org/schemas/thing-description/v1.0.0"
+	xsi:schemaLocation="https://openhab.org/schemas/thing-description/v1.0.0 https://openhab.org/schemas/thing-description-1.0.0.xsd">
+	<thing-type id="softwarepwm">
+		<label>Software PWM</label>
+		<description>Software emulated PWM</description>
+
+		<channels>
+			<channel id="pwm" typeId="pwm"/>
+		</channels>
+
+		<config-description>
+			<parameter name="gpio" type="integer" required="true">
+				<label>GPIO pin</label>
+				<description>GPIO pin</description>
+				<options>
+					<option value="0">GPIO 0</option>
+					<option value="1">GPIO 1</option>
+					<option value="2">GPIO 2</option>
+					<option value="3">GPIO 3</option>
+					<option value="4">GPIO 4</option>
+					<option value="5">GPIO 5</option>
+					<option value="6">GPIO 6</option>
+					<option value="7">GPIO 7</option>
+					<option value="8">GPIO 8</option>
+					<option value="9">GPIO 9</option>
+					<option value="10">GPIO 10</option>
+					<option value="11">GPIO 11</option>
+					<option value="12">GPIO 12</option>
+					<option value="13">GPIO 13</option>
+					<option value="14">GPIO 14</option>
+					<option value="15">GPIO 15</option>
+					<option value="16">GPIO 16</option>
+					<option value="17">GPIO 17</option>
+					<option value="18">GPIO 18</option>
+					<option value="19">GPIO 19</option>
+					<option value="20">GPIO 20</option>
+					<option value="21">GPIO 21</option>
+					<option value="22">GPIO 22</option>
+					<option value="23">GPIO 23</option>
+					<option value="24">GPIO 24</option>
+					<option value="25">GPIO 25</option>
+					<option value="26">GPIO 26</option>
+					<option value="27">GPIO 27</option>
+					<option value="28">GPIO 28</option>
+					<option value="29">GPIO 29</option>
+					<option value="30">GPIO 30</option>
+					<option value="31">GPIO 31</option>
+				</options>
+				<default>0</default>
+			</parameter>
+
+			<parameter name="range" type="integer" required="true" min="0" max="65535">
+				<label>Range</label>
+				<description>Range</description>
+				<default>100</default>
+			</parameter>
+
+		</config-description>
+
+	</thing-type>
+
+	<channel-type id="pwm">
+		<item-type>Number</item-type>
+		<label>PWM rate</label>
+	</channel-type>
+
+</thing:thing-descriptions>

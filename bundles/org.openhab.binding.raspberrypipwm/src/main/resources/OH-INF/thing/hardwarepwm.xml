@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<thing:thing-descriptions bindingId="raspberrypipwm"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:thing="https://openhab.org/schemas/thing-description/v1.0.0"
+	xsi:schemaLocation="https://openhab.org/schemas/thing-description/v1.0.0 https://openhab.org/schemas/thing-description-1.0.0.xsd">
+	<thing-type id="hardwarepwm">
+		<label>Hardware PWM</label>
+		<description>Hardware generated PWM.
+			The RaspberryPi uses an internal clock at 19.2 MHz. This frequency, divided by the
+			specified Clock divider value, is the frequency at which the PWM counter is incremented. When the counter reaches the
+			value specified by Range, it resets to zero. While the counter is less than the specified duty cycle, the output is
+			high, otherwise the output is low.
+		</description>
+		<channels>
+			<channel id="pwm" typeId="pwm"/>
+		</channels>
+
+		<config-description>
+			<parameter name="gpio" type="integer" required="true">
+				<label>GPIO</label>
+				<description>GPIO pin</description>
+				<options>
+					<option value="12">GPIO 12 (PWM0)</option>
+					<option value="18">GPIO 18 (PWM0)</option>
+					<option value="13">GPIO 13 (PWM1)</option>
+					<option value="19">GPIO 19 (PWM1)</option>
+				</options>
+				<default>12</default>
+			</parameter>
+
+			<parameter name="mode" type="integer" required="true">
+				<label>PWM mode</label>
+				<description>PWM mode</description>
+				<options>
+					<option value="0">mark:space</option>
+					<option value="1">balanced</option>
+				</options>
+				<default>0</default>
+			</parameter>
+
+			<parameter name="clock" type="integer" required="true" min="2" max="4095">
+				<label>Clock</label>
+				<description>Clock divider</description>
+			</parameter>
+
+			<parameter name="range" type="integer" required="true" min="2">
+				<label>Range</label>
+				<description>Duty cycle range</description>
+			</parameter>
+
+		</config-description>
+
+	</thing-type>
+
+	<channel-type id="pwm">
+		<item-type>Number</item-type>
+		<label>PWM rate</label>
+	</channel-type>
+
+</thing:thing-descriptions>
