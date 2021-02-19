@@ -27,13 +27,13 @@ The binding itself does not need any configuration, however openHAB must be run 
 Before you run openHAB as root, please make sure you understand the risks and implications.
 To run openHAB as root (assuming you use systemd):
 
-- edit the file /usr/lib/systemd/system/openhab2.service and change to User and Group to root
+- edit the file /usr/lib/systemd/system/openhab.service and change to User and Group to root
 - reload the daemon settings with systemctl daemon-reload
-- restart openHAB with systemctl restart openhab2
+- restart openHAB with systemctl restart openhab
 
 ## Thing Configuration
 
-### Hardware PWM pin
+### Hardware PWM
 
 | Parameter                 | Name                      | Description                                    | Required | Default |
 |---------------------------|---------------------------|------------------------------------------------|----------|---------|
@@ -42,7 +42,7 @@ To run openHAB as root (assuming you use systemd):
 | `clock`                   | Clock                     | Clock divider                                  | yes      |         |
 | `range`                   | Range                     | Duty cycle range                               | yes      |         |
 
-### Software PWM pin
+### Software PWM
 
 | Parameter                 | Name                      | Description                                    | Required | Default |
 |---------------------------|---------------------------|------------------------------------------------|----------|---------|
@@ -53,9 +53,9 @@ To run openHAB as root (assuming you use systemd):
 
 Both the hardware and software PWM things have one channel:
 
-| Channel       | Item Type | Description             | Read/Write |
-|---------------|-----------|-------------------------|------------|
-| `pwm`         | Number    | PWM rate                | r/w        |
+| Channel       | Item Type | Description             | Access |
+|---------------|-----------|-------------------------|--------|
+| `pwm`         | Number    | PWM rate                | R/W    |
 
 ## Full Example
 
