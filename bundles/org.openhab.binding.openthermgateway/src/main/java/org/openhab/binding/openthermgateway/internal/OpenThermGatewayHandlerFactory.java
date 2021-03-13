@@ -37,24 +37,25 @@ import org.osgi.service.component.annotations.Component;
 @Component(service = ThingHandlerFactory.class, configurationPid = "binding.openthermgateway")
 @NonNullByDefault
 public class OpenThermGatewayHandlerFactory extends BaseThingHandlerFactory {
-    private static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = Set.of(
-            OpenThermGatewayBindingConstants.GATEWAY_THING_TYPE, OpenThermGatewayBindingConstants.BOILER_THING_TYPE,
-            OpenThermGatewayBindingConstants.VENTILATION_HEAT_RECOVERY_THING_TYPE);
+
+    private static final Set<ThingTypeUID> SUPPORTED_THING_TYPE_UIDS = Set.of(
+            OpenThermGatewayBindingConstants.GATEWAY_THING_TYPE_UID,
+            OpenThermGatewayBindingConstants.BOILER_THING_TYPE_UID, OpenThermGatewayBindingConstants.VH_THING_TYPE_UID);
 
     @Override
     public boolean supportsThingType(ThingTypeUID thingTypeUID) {
-        return SUPPORTED_THING_TYPES_UIDS.contains(thingTypeUID);
+        return SUPPORTED_THING_TYPE_UIDS.contains(thingTypeUID);
     }
 
     @Override
     protected @Nullable ThingHandler createHandler(Thing thing) {
         ThingTypeUID thingTypeUID = thing.getThingTypeUID();
 
-        if (thingTypeUID.equals(OpenThermGatewayBindingConstants.GATEWAY_THING_TYPE)) {
+        if (thingTypeUID.equals(OpenThermGatewayBindingConstants.GATEWAY_THING_TYPE_UID)) {
             return new GatewayHandler((Bridge) thing);
-        } else if (thingTypeUID.equals(OpenThermGatewayBindingConstants.BOILER_THING_TYPE)) {
+        } else if (thingTypeUID.equals(OpenThermGatewayBindingConstants.BOILER_THING_TYPE_UID)) {
             return new BoilerHandler(thing);
-        } else if (thingTypeUID.equals(OpenThermGatewayBindingConstants.VENTILATION_HEAT_RECOVERY_THING_TYPE)) {
+        } else if (thingTypeUID.equals(OpenThermGatewayBindingConstants.VH_THING_TYPE_UID)) {
             return new VentilationHeatRecoveryHandler(thing);
         }
 

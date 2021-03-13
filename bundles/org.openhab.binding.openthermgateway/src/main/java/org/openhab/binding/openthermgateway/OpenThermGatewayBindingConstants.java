@@ -27,10 +27,9 @@ public class OpenThermGatewayBindingConstants {
     private static final String BINDING_ID = "openthermgateway";
 
     // List of all Thing Type UID's
-    public static final ThingTypeUID GATEWAY_THING_TYPE = new ThingTypeUID(BINDING_ID, "gateway");
-    public static final ThingTypeUID BOILER_THING_TYPE = new ThingTypeUID(BINDING_ID, "boiler");
-    public static final ThingTypeUID VENTILATION_HEAT_RECOVERY_THING_TYPE = new ThingTypeUID(BINDING_ID,
-            "ventilationheatrecovery");
+    public static final ThingTypeUID GATEWAY_THING_TYPE_UID = new ThingTypeUID(BINDING_ID, "gateway");
+    public static final ThingTypeUID BOILER_THING_TYPE_UID = new ThingTypeUID(BINDING_ID, "boiler");
+    public static final ThingTypeUID VH_THING_TYPE_UID = new ThingTypeUID(BINDING_ID, "ventilationheatrecovery");
 
     // List of all Channel id's
     public static final String CHANNEL_SEND_COMMAND = "sendcommand";
