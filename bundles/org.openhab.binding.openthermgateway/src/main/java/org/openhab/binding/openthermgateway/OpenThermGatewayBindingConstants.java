@@ -64,4 +64,36 @@ public class OpenThermGatewayBindingConstants {
     public static final String CHANNEL_WATER_OVER_TEMP = "waterovtemp";
     public static final String CHANNEL_OEM_FAULTCODE = "oemfaultcode";
     public static final String CHANNEL_DIAGNOSTICS_INDICATION = "diag";
+
+
+    public static final String CHANNEL_VH_VENTILATION_ENABLE = "vh_ventilationenable";
+    public static final String CHANNEL_VH_BYPASS_POSITION = "vh_bypassposition";
+    public static final String CHANNEL_VH_BYPASS_MODE = "vh_bypassmode";
+    public static final String CHANNEL_VH_FREE_VENTILATION_MODE = "vh_freeventilationmode";
+    public static final String CHANNEL_VH_FAULT_INDICATION = "vh_faultindication";
+    public static final String CHANNEL_VH_VENTILATION_MODE = "vh_ventilationmode";
+    public static final String CHANNEL_VH_BYPASS_STATUS = "vh_bypassstatus";
+    public static final String CHANNEL_VH_BYPASS_AUTOMATIC_STATUS = "vh_bypassautomaticstatus";
+    public static final String CHANNEL_VH_FREE_VENTILATION_STATUS = "vh_freeventilationstatus";
+    public static final String CHANNEL_VH_DIAGNOSTIC_INDICATION = "vh_diagnosticindication";
+    public static final String CHANNEL_VH_CONTROL_SETPOINT = "vh_controlsetpoint";
+    public static final String CHANNEL_VH_DIAGNOSTIC_CODE = "vh_diagnosticcode";
+    public static final String CHANNEL_VH_SYSTEM_TYPE = "vh_systemtype";
+    public static final String CHANNEL_VH_BYPASS = "vh_bypass";
+    public static final String CHANNEL_VH_SPEED_CONTROL = "vh_speedcontrol";
+    public static final String CHANNEL_VH_MEMBER_ID = "vh_memberid";
+    public static final String CHANNEL_VH_OPENTHERM_VERSION = "vh_openthermversion";
+    public static final String CHANNEL_VH_VERSION_TYPE = "vh_versiontype";
+    public static final String CHANNEL_VH_RELATIVE_VENTILATION = "vh_relativeventilation";
+    public static final String CHANNEL_VH_CO2_LEVEL = "vh_co2level";
+    public static final String CHANNEL_VH_SUPPLY_INLET_TEMP = "vh_supplyinlettemp";
+    public static final String CHANNEL_VH_SUPPLY_OUTLET_TEMP = "vh_supplyoutlettemp";
+    public static final String CHANNEL_VH_EXHAUST_INLET_TEMP = "vh_exhaustinlettemp";
+    public static final String CHANNEL_VH_EXHAUST_OUTLET_TEMP = "vh_exhaustoutlettemp";
+    public static final String CHANNEL_VH_ACTUAL_EXHAUST_FAN_SPEED = "vh_actualexhaustfanspeed";
+    public static final String CHANNEL_VH_ACTUAL_INLET_FAN_SPEED = "vh_actualinletfanspeed";
+    public static final String CHANNEL_VH_NOMINAL_VENTILATION_VALUE = "vh_nominalventilationvalue";
+    public static final String CHANNEL_VH_TSP_NUMBER = "vh_tspnumber";
+    public static final String CHANNEL_VH_TSP_ENTRY = "vh_tspentry";
+
 }
