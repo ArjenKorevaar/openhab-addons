@@ -3,9 +3,12 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:thing="https://openhab.org/schemas/thing-description/v1.0.0"
 	xsi:schemaLocation="https://openhab.org/schemas/thing-description/v1.0.0 https://openhab.org/schemas/thing-description-1.0.0.xsd">
-	<thing-type id="otgw">
-		<label>OpenTherm Gateway</label>
-		<description>OpenTherm Gateway binding</description>
+	<thing-type id="boiler">
+		<supported-bridge-type-refs>
+			<bridge-type-ref id="gateway"/>
+		</supported-bridge-type-refs>
+		<label>Boiler</label>
+		<description>Boiler</description>
 		<channels>
 			<channel id="roomtemp" typeId="roomtemp"/>
 			<channel id="roomsetpoint" typeId="roomsetpoint"/>
@@ -44,12 +47,7 @@
 			<channel id="airpressfault" typeId="airpressfault"/>
 			<channel id="waterovtemp" typeId="waterovtemp"/>
 			<channel id="oemfaultcode" typeId="oemfaultcode"/>
-			<channel id="sendcommand" typeId="sendcommand"/>
 		</channels>
-		<properties>
-			<property name="version">1.2.0</property>
-		</properties>
-		<config-description-ref uri="thing-type:openthermgateway:otgw"/>
 	</thing-type>
 
 </thing:thing-descriptions>

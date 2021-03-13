@@ -15,18 +15,16 @@ package org.openhab.binding.openthermgateway.internal;
 import org.eclipse.jdt.annotation.NonNullByDefault;
 
 /**
- * The {@link OpenThermGatewayCallback} is used as a callback interface by a connector to signal status
- * and relay incoming messages to be processed by the binding.
+ * The {@link OpenThermGatewayConnector} interface is used to allow multiple types of connectors
+ * to be implemented and used to connect to the OpenTherm Gateway.
  * 
  * @author Arjen Korevaar - Initial contribution
  */
 @NonNullByDefault
-public interface OpenThermGatewayCallback {
-    void connecting();
+public interface GatewayConnector extends Runnable {
+    void sendCommand(GatewayCommand command);
 
-    void connected();
+    boolean isConnected();
 
-    void disconnected();
-
-    void receiveMessage(Message message);
+    void stop();
 }

@@ -10,29 +10,86 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.openhab.binding.openthermgateway;
-
-import java.util.Set;
+package org.openhab.binding.openthermgateway.handler;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
-import org.openhab.core.thing.ThingTypeUID;
+import org.openhab.binding.openthermgateway.internal.DataItem;
+import org.openhab.binding.openthermgateway.internal.Message;
+import org.openhab.core.thing.ChannelUID;
+import org.openhab.core.thing.Thing;
+import org.openhab.core.types.Command;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * The {@link OpenThermGatewayBindingConstants} class defines common constants, which are
- * used across the whole binding.
+ * The {@link BaseDeviceHandler} is responsible for handling commands, which are
+ * sent to one of the channels.
  *
  * @author Arjen Korevaar - Initial contribution
  */
 @NonNullByDefault
-public class OpenThermGatewayBindingConstants {
+public class BoilerHandler extends BaseDeviceHandler {
 
-    private static final String BINDING_ID = "openthermgateway";
+    private final Logger logger = LoggerFactory.getLogger(BoilerHandler.class);
 
-    // List of all Thing Type UID's
-    public static final ThingTypeUID MAIN_THING_TYPE = new ThingTypeUID(BINDING_ID, "otgw");
+    public BoilerHandler(Thing thing) {
+        super(thing);
+    }
 
-    // List of all Channel id's
-    public static final String CHANNEL_SEND_COMMAND = "sendcommand";
+    @Override
+    public void initialize() {
+    }
+
+    @Override
+    public void receiveMessage(Message message) {
+        // Generic method to handle the update of a channel for any base Device type
+        // if (!OpenThermGatewayBindingConstants.SUPPORTED_CHANNEL_IDS.contains(channelId)
+        // || (dataItem.getFilteredCode() != null && dataItem.getFilteredCode() != message.getCode())) {
+        // continue;
+        // }
+
+        for (DataItem dataItem : dataItems) {
+            String channelId = dataItem.getSubject();
+
+            if (SUPPORTED_CHANNEL_IDS.contains(channelId)) {
+                super.updateState(message, dataItem);
+            }
+        }
+    }
+
+    @Override
+    public void handleCommand(ChannelUID channelUID, Command command) {
+        String channelId = dataItem.getSubject();
+
+        if (handler.supportsChannel(channelId)) {
+
+        }
+    }
+
+    // private @Nullable String getGatewayCodeFromChannel(String channel) throws IllegalArgumentException {
+    // switch (channel) {
+    // case OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_SETPOINT_TEMPORARY:
+    // return GatewayCommandCode.TemperatureTemporary;
+    // case OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_SETPOINT_CONSTANT:
+    // return GatewayCommandCode.TemperatureConstant;
+    // case OpenThermGatewayBindingConstants.CHANNEL_OUTSIDE_TEMPERATURE:
+    // return GatewayCommandCode.TemperatureOutside;
+    // case OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_DHW_SETPOINT:
+    // return GatewayCommandCode.SetpointWater;
+    // case OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_CENTRAL_HEATING_WATER_SETPOINT:
+    // return GatewayCommandCode.ControlSetpoint;
+    // case OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_CENTRAL_HEATING_ENABLED:
+    // return GatewayCommandCode.CentralHeating;
+    // case OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_CENTRAL_HEATING2_WATER_SETPOINT:
+    // return GatewayCommandCode.ControlSetpoint2;
+    // case OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_CENTRAL_HEATING2_ENABLED:
+    // return GatewayCommandCode.CentralHeating2;
+    // case OpenThermGatewayBindingConstants.CHANNEL_SEND_COMMAND:
+    // return null;
+    // default:
+    // throw new IllegalArgumentException(String.format("Unknown channel %s", channel));
+    // }
+    // }
 
     public static final String CHANNEL_OVERRIDE_SETPOINT_TEMPORARY = "temperaturetemporary";
     public static final String CHANNEL_OVERRIDE_SETPOINT_CONSTANT = "temperatureconstant";
@@ -73,7 +130,7 @@ public class OpenThermGatewayBindingConstants {
     public static final String CHANNEL_OEM_FAULTCODE = "oemfaultcode";
     public static final String CHANNEL_DIAGNOSTICS_INDICATION = "diag";
 
-    public static final Set<String> SUPPORTED_CHANNEL_IDS = Set.of(CHANNEL_ROOM_TEMPERATURE, CHANNEL_ROOM_SETPOINT,
+    private static final Set<String> SUPPORTED_CHANNEL_IDS = Set.of(CHANNEL_ROOM_TEMPERATURE, CHANNEL_ROOM_SETPOINT,
             CHANNEL_FLOW_TEMPERATURE, CHANNEL_RETURN_TEMPERATURE, CHANNEL_OUTSIDE_TEMPERATURE,
             CHANNEL_CENTRAL_HEATING_WATER_PRESSURE, CHANNEL_CENTRAL_HEATING_ENABLED,
             CHANNEL_REQUESTED_CENTRAL_HEATING_ENABLED, CHANNEL_OVERRIDE_CENTRAL_HEATING_ENABLED,
