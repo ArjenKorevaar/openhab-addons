@@ -12,10 +12,16 @@
  */
 package org.openhab.binding.openthermgateway.handler;
 
+import java.util.Set;
+
 import org.eclipse.jdt.annotation.NonNullByDefault;
+import org.openhab.binding.openthermgateway.OpenThermGatewayBindingConstants;
 import org.openhab.binding.openthermgateway.internal.DataItem;
+import org.openhab.binding.openthermgateway.internal.DataItemGroup;
 import org.openhab.binding.openthermgateway.internal.Message;
+import org.openhab.core.thing.ChannelUID;
 import org.openhab.core.thing.Thing;
+import org.openhab.core.types.Command;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +57,7 @@ public class VentilationHeatRecoveryHandler extends BaseDeviceHandler {
         // }
 
         DataItem[] dataItems = DataItemGroup.dataItemGroups.get(message.getID());
-        
+
         for (DataItem dataItem : dataItems) {
             String channelId = dataItem.getSubject();
 
@@ -95,8 +101,7 @@ public class VentilationHeatRecoveryHandler extends BaseDeviceHandler {
     // }
     // }
 
-    private static final String CHANNEL_ROOM_TEMPERATURE = "temperaturetemporary";
-    private static final String CHANNEL_ROOM_SETPOINT = "temperatureconstant";
-
-    private static final Set<String> SUPPORTED_CHANNEL_IDS = Set.of(CHANNEL_ROOM_TEMPERATURE, CHANNEL_ROOM_SETPOINT);
+    private static final Set<String> SUPPORTED_CHANNEL_IDS = Set.of(
+            OpenThermGatewayBindingConstants.CHANNEL_ROOM_TEMPERATURE,
+            OpenThermGatewayBindingConstants.CHANNEL_ROOM_SETPOINT);
 }

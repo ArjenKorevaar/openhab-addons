@@ -12,8 +12,12 @@
  */
 package org.openhab.binding.openthermgateway.handler;
 
+import java.util.Set;
+
 import org.eclipse.jdt.annotation.NonNullByDefault;
+import org.openhab.binding.openthermgateway.OpenThermGatewayBindingConstants;
 import org.openhab.binding.openthermgateway.internal.DataItem;
+import org.openhab.binding.openthermgateway.internal.DataItemGroup;
 import org.openhab.binding.openthermgateway.internal.Message;
 import org.openhab.core.thing.ChannelUID;
 import org.openhab.core.thing.Thing;
@@ -61,11 +65,11 @@ public class BoilerHandler extends BaseDeviceHandler {
 
     @Override
     public void handleCommand(ChannelUID channelUID, Command command) {
-        String channelId = dataItem.getSubject();
+        // String channelId = dataItem.getSubject();
 
-        if (handler.supportsChannel(channelId)) {
+        // if (handler.supportsChannel(channelId)) {
 
-        }
+        // }
     }
 
     // private @Nullable String getGatewayCodeFromChannel(String channel) throws IllegalArgumentException {
@@ -93,57 +97,39 @@ public class BoilerHandler extends BaseDeviceHandler {
     // }
     // }
 
-    public static final String CHANNEL_OVERRIDE_SETPOINT_TEMPORARY = "temperaturetemporary";
-    public static final String CHANNEL_OVERRIDE_SETPOINT_CONSTANT = "temperatureconstant";
-    public static final String CHANNEL_OVERRIDE_DHW_SETPOINT = "overridedhwsetpoint";
-    public static final String CHANNEL_ROOM_TEMPERATURE = "roomtemp";
-    public static final String CHANNEL_ROOM_SETPOINT = "roomsetpoint";
-    public static final String CHANNEL_FLOW_TEMPERATURE = "flowtemp";
-    public static final String CHANNEL_RETURN_TEMPERATURE = "returntemp";
-    public static final String CHANNEL_OUTSIDE_TEMPERATURE = "outsidetemp";
-    public static final String CHANNEL_CENTRAL_HEATING_WATER_SETPOINT = "controlsetpoint";
-    public static final String CHANNEL_REQUESTED_CENTRAL_HEATING_WATER_SETPOINT = "controlsetpointrequested";
-    public static final String CHANNEL_OVERRIDE_CENTRAL_HEATING_WATER_SETPOINT = "controlsetpointoverride";
-    public static final String CHANNEL_CENTRAL_HEATING2_WATER_SETPOINT = "controlsetpoint2";
-    public static final String CHANNEL_REQUESTED_CENTRAL_HEATING2_WATER_SETPOINT = "controlsetpoint2requested";
-    public static final String CHANNEL_OVERRIDE_CENTRAL_HEATING2_WATER_SETPOINT = "controlsetpoint2override";
-    public static final String CHANNEL_CENTRAL_HEATING_WATER_PRESSURE = "waterpressure";
-    public static final String CHANNEL_CENTRAL_HEATING_ENABLED = "ch_enable";
-    public static final String CHANNEL_REQUESTED_CENTRAL_HEATING_ENABLED = "ch_enablerequested";
-    public static final String CHANNEL_OVERRIDE_CENTRAL_HEATING_ENABLED = "ch_enableoverride";
-    public static final String CHANNEL_CENTRAL_HEATING2_ENABLED = "ch2_enable";
-    public static final String CHANNEL_REQUESTED_CENTRAL_HEATING2_ENABLED = "ch2_enablerequested";
-    public static final String CHANNEL_OVERRIDE_CENTRAL_HEATING2_ENABLED = "ch2_enableoverride";
-    public static final String CHANNEL_CENTRAL_HEATING_MODE = "ch_mode";
-    public static final String CHANNEL_DOMESTIC_HOT_WATER_TEMPERATURE = "dhwtemp";
-    public static final String CHANNEL_DOMESTIC_HOT_WATER_ENABLED = "dhw_enable";
-    public static final String CHANNEL_DOMESTIC_HOT_WATER_MODE = "dhw_mode";
-    public static final String CHANNEL_DOMESTIC_HOT_WATER_SETPOINT = "tdhwset";
-    public static final String CHANNEL_FLAME = "flame";
-    public static final String CHANNEL_RELATIVE_MODULATION_LEVEL = "modulevel";
-    public static final String CHANNEL_MAXIMUM_MODULATION_LEVEL = "maxrelmdulevel";
-    public static final String CHANNEL_FAULT = "fault";
-    public static final String CHANNEL_SERVICEREQUEST = "servicerequest";
-    public static final String CHANNEL_REMOTE_RESET = "lockout-reset";
-    public static final String CHANNEL_LOW_WATER_PRESSURE = "lowwaterpress";
-    public static final String CHANNEL_GAS_FLAME_FAULT = "gasflamefault";
-    public static final String CHANNEL_AIR_PRESSURE_FAULT = "airpressfault";
-    public static final String CHANNEL_WATER_OVER_TEMP = "waterovtemp";
-    public static final String CHANNEL_OEM_FAULTCODE = "oemfaultcode";
-    public static final String CHANNEL_DIAGNOSTICS_INDICATION = "diag";
-
-    private static final Set<String> SUPPORTED_CHANNEL_IDS = Set.of(CHANNEL_ROOM_TEMPERATURE, CHANNEL_ROOM_SETPOINT,
-            CHANNEL_FLOW_TEMPERATURE, CHANNEL_RETURN_TEMPERATURE, CHANNEL_OUTSIDE_TEMPERATURE,
-            CHANNEL_CENTRAL_HEATING_WATER_PRESSURE, CHANNEL_CENTRAL_HEATING_ENABLED,
-            CHANNEL_REQUESTED_CENTRAL_HEATING_ENABLED, CHANNEL_OVERRIDE_CENTRAL_HEATING_ENABLED,
-            CHANNEL_CENTRAL_HEATING2_ENABLED, CHANNEL_REQUESTED_CENTRAL_HEATING2_ENABLED,
-            CHANNEL_OVERRIDE_CENTRAL_HEATING2_ENABLED, CHANNEL_CENTRAL_HEATING_MODE,
-            CHANNEL_CENTRAL_HEATING_WATER_SETPOINT, CHANNEL_REQUESTED_CENTRAL_HEATING_WATER_SETPOINT,
-            CHANNEL_OVERRIDE_CENTRAL_HEATING_WATER_SETPOINT, CHANNEL_CENTRAL_HEATING2_WATER_SETPOINT,
-            CHANNEL_REQUESTED_CENTRAL_HEATING2_WATER_SETPOINT, CHANNEL_OVERRIDE_CENTRAL_HEATING2_WATER_SETPOINT,
-            CHANNEL_DOMESTIC_HOT_WATER_TEMPERATURE, CHANNEL_DOMESTIC_HOT_WATER_ENABLED, CHANNEL_DOMESTIC_HOT_WATER_MODE,
-            CHANNEL_DOMESTIC_HOT_WATER_SETPOINT, CHANNEL_FLAME, CHANNEL_RELATIVE_MODULATION_LEVEL,
-            CHANNEL_MAXIMUM_MODULATION_LEVEL, CHANNEL_FAULT, CHANNEL_SERVICEREQUEST, CHANNEL_REMOTE_RESET,
-            CHANNEL_LOW_WATER_PRESSURE, CHANNEL_GAS_FLAME_FAULT, CHANNEL_AIR_PRESSURE_FAULT, CHANNEL_WATER_OVER_TEMP,
-            CHANNEL_OEM_FAULTCODE, CHANNEL_DIAGNOSTICS_INDICATION);
+    private static final Set<String> SUPPORTED_CHANNEL_IDS = Set.of(
+            OpenThermGatewayBindingConstants.CHANNEL_ROOM_TEMPERATURE,
+            OpenThermGatewayBindingConstants.CHANNEL_ROOM_SETPOINT,
+            OpenThermGatewayBindingConstants.CHANNEL_FLOW_TEMPERATURE,
+            OpenThermGatewayBindingConstants.CHANNEL_RETURN_TEMPERATURE,
+            OpenThermGatewayBindingConstants.CHANNEL_OUTSIDE_TEMPERATURE,
+            OpenThermGatewayBindingConstants.CHANNEL_CENTRAL_HEATING_WATER_PRESSURE,
+            OpenThermGatewayBindingConstants.CHANNEL_CENTRAL_HEATING_ENABLED,
+            OpenThermGatewayBindingConstants.CHANNEL_REQUESTED_CENTRAL_HEATING_ENABLED,
+            OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_CENTRAL_HEATING_ENABLED,
+            OpenThermGatewayBindingConstants.CHANNEL_CENTRAL_HEATING2_ENABLED,
+            OpenThermGatewayBindingConstants.CHANNEL_REQUESTED_CENTRAL_HEATING2_ENABLED,
+            OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_CENTRAL_HEATING2_ENABLED,
+            OpenThermGatewayBindingConstants.CHANNEL_CENTRAL_HEATING_MODE,
+            OpenThermGatewayBindingConstants.CHANNEL_CENTRAL_HEATING_WATER_SETPOINT,
+            OpenThermGatewayBindingConstants.CHANNEL_REQUESTED_CENTRAL_HEATING_WATER_SETPOINT,
+            OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_CENTRAL_HEATING_WATER_SETPOINT,
+            OpenThermGatewayBindingConstants.CHANNEL_CENTRAL_HEATING2_WATER_SETPOINT,
+            OpenThermGatewayBindingConstants.CHANNEL_REQUESTED_CENTRAL_HEATING2_WATER_SETPOINT,
+            OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_CENTRAL_HEATING2_WATER_SETPOINT,
+            OpenThermGatewayBindingConstants.CHANNEL_DOMESTIC_HOT_WATER_TEMPERATURE,
+            OpenThermGatewayBindingConstants.CHANNEL_DOMESTIC_HOT_WATER_ENABLED,
+            OpenThermGatewayBindingConstants.CHANNEL_DOMESTIC_HOT_WATER_MODE,
+            OpenThermGatewayBindingConstants.CHANNEL_DOMESTIC_HOT_WATER_SETPOINT,
+            OpenThermGatewayBindingConstants.CHANNEL_FLAME,
+            OpenThermGatewayBindingConstants.CHANNEL_RELATIVE_MODULATION_LEVEL,
+            OpenThermGatewayBindingConstants.CHANNEL_MAXIMUM_MODULATION_LEVEL,
+            OpenThermGatewayBindingConstants.CHANNEL_FAULT, OpenThermGatewayBindingConstants.CHANNEL_SERVICEREQUEST,
+            OpenThermGatewayBindingConstants.CHANNEL_REMOTE_RESET,
+            OpenThermGatewayBindingConstants.CHANNEL_LOW_WATER_PRESSURE,
+            OpenThermGatewayBindingConstants.CHANNEL_GAS_FLAME_FAULT,
+            OpenThermGatewayBindingConstants.CHANNEL_AIR_PRESSURE_FAULT,
+            OpenThermGatewayBindingConstants.CHANNEL_WATER_OVER_TEMP,
+            OpenThermGatewayBindingConstants.CHANNEL_OEM_FAULTCODE,
+            OpenThermGatewayBindingConstants.CHANNEL_DIAGNOSTICS_INDICATION);
 }

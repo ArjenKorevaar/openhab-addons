@@ -23,6 +23,7 @@ import org.openhab.binding.openthermgateway.internal.GatewayConfiguration;
 import org.openhab.binding.openthermgateway.internal.GatewayConnector;
 import org.openhab.binding.openthermgateway.internal.GatewaySocketConnector;
 import org.openhab.binding.openthermgateway.internal.Message;
+import org.openhab.core.thing.Bridge;
 import org.openhab.core.thing.ChannelUID;
 import org.openhab.core.thing.Thing;
 import org.openhab.core.thing.ThingStatus;
@@ -51,8 +52,8 @@ public class GatewayHandler extends BaseBridgeHandler implements GatewayCallback
     private boolean connecting = false;
     private boolean explicitDisconnect = false;
 
-    public GatewayHandler(Thing thing) {
-        super(thing);
+    public GatewayHandler(Bridge bridge) {
+        super(bridge);
     }
 
     @Override
@@ -186,7 +187,7 @@ public class GatewayHandler extends BaseBridgeHandler implements GatewayCallback
 
     private void connect() {
         @Nullable
-        OpenThermGatewayConfiguration conf = config;
+        GatewayConfiguration conf = config;
 
         explicitDisconnect = false;
 
@@ -212,7 +213,7 @@ public class GatewayHandler extends BaseBridgeHandler implements GatewayCallback
 
     private void disconnect() {
         @Nullable
-        OpenThermGatewayConnector conn = connector;
+        GatewayConnector conn = connector;
 
         explicitDisconnect = true;
 

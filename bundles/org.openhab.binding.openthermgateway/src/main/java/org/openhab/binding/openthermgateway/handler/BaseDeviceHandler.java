@@ -21,8 +21,10 @@ import org.openhab.binding.openthermgateway.internal.Message;
 import org.openhab.core.library.types.DecimalType;
 import org.openhab.core.library.types.OnOffType;
 import org.openhab.core.library.types.QuantityType;
+import org.openhab.core.thing.ChannelUID;
 import org.openhab.core.thing.Thing;
 import org.openhab.core.thing.binding.BaseThingHandler;
+import org.openhab.core.types.Command;
 import org.openhab.core.types.State;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +43,7 @@ public class BaseDeviceHandler extends BaseThingHandler {
     public BaseDeviceHandler(Thing thing) {
         super(thing);
     }
-    
+
     @Override
     public void initialize() {
     }

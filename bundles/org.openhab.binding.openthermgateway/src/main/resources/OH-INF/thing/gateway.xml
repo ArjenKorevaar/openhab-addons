@@ -12,6 +12,7 @@
 		<properties>
 			<property name="version">1.2.0</property>
 		</properties>
-		<config-description-ref uri="bridge-type:openthermgateway:gateway"/>
+		<config-description-ref uri="thing-type:openthermgateway:gateway"/>
 	</bridge-type>
+
 </thing:thing-descriptions>
