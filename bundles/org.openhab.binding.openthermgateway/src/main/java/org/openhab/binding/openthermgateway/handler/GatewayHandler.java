@@ -17,12 +17,18 @@ import java.util.concurrent.TimeUnit;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
+import org.openhab.binding.openthermgateway.OpenThermGatewayBindingConstants;
 import org.openhab.binding.openthermgateway.internal.DataItemGroup;
 import org.openhab.binding.openthermgateway.internal.GatewayCallback;
+import org.openhab.binding.openthermgateway.internal.GatewayCommand;
+import org.openhab.binding.openthermgateway.internal.GatewayCommandCode;
 import org.openhab.binding.openthermgateway.internal.GatewayConfiguration;
 import org.openhab.binding.openthermgateway.internal.GatewayConnector;
 import org.openhab.binding.openthermgateway.internal.GatewaySocketConnector;
 import org.openhab.binding.openthermgateway.internal.Message;
+import org.openhab.core.library.types.OnOffType;
+import org.openhab.core.library.types.QuantityType;
+import org.openhab.core.library.unit.SIUnits;
 import org.openhab.core.thing.Bridge;
 import org.openhab.core.thing.ChannelUID;
 import org.openhab.core.thing.Thing;
@@ -31,6 +37,7 @@ import org.openhab.core.thing.ThingStatusDetail;
 import org.openhab.core.thing.binding.BaseBridgeHandler;
 import org.openhab.core.types.Command;
 import org.openhab.core.types.RefreshType;
+import org.openhab.core.types.UnDefType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,57 +74,58 @@ public class GatewayHandler extends BaseBridgeHandler implements GatewayCallback
         connect();
     }
 
+    public void sendCommand() {
+    }
+
     @Override
     public void handleCommand(ChannelUID channelUID, Command command) {
         @Nullable
         GatewayConnector conn = connector;
 
-        logger.debug("Received channel: {}, command: {}", channelUID, command);
+        logger.debug("Received command {} {}", channelUID, command);
 
         if (!(command instanceof RefreshType)) {
             String channel = channelUID.getId();
-            // String code = getGatewayCodeFromChannel(channel);
+            String code = getGatewayCodeFromChannel(channel);
 
-            // GatewayCommand gatewayCommand = null;
+            GatewayCommand gatewayCommand = null;
 
-            // if (command instanceof OnOffType) {
-            // OnOffType onOff = (OnOffType) command;
-            // gatewayCommand = GatewayCommand.parse(code, onOff == OnOffType.ON ? "1" : "0");
-            // }
-            // if (command instanceof QuantityType<?>) {
-            // QuantityType<?> quantityType = ((QuantityType<?>) command).toUnit(SIUnits.CELSIUS);
+            if (command instanceof OnOffType) {
+                OnOffType onOff = (OnOffType) command;
+                gatewayCommand = GatewayCommand.parse(code, onOff == OnOffType.ON ? "1" : "0");
+            }
+            if (command instanceof QuantityType<?>) {
+                QuantityType<?> quantityType = ((QuantityType<?>) command).toUnit(SIUnits.CELSIUS);
 
-            // if (quantityType != null) {
-            // double value = quantityType.doubleValue();
-            // gatewayCommand = GatewayCommand.parse(code, Double.toString(value));
-            // }
-            // }
+                if (quantityType != null) {
+                    double value = quantityType.doubleValue();
+                    gatewayCommand = GatewayCommand.parse(code, Double.toString(value));
+                }
+            }
 
-            // if (gatewayCommand == null) {
-            // gatewayCommand = GatewayCommand.parse(code, command.toFullString());
-            // }
+            if (gatewayCommand == null) {
+                gatewayCommand = GatewayCommand.parse(code, command.toFullString());
+            }
 
-            // if (conn != null && conn.isConnected()) {
-            // conn.sendCommand(gatewayCommand);
+            if (conn != null && conn.isConnected()) {
+                conn.sendCommand(gatewayCommand);
 
-            // if (code == GatewayCommandCode.ControlSetpoint) {
-            // if (gatewayCommand.getMessage().equals("0.0")) {
-            // updateState(OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_CENTRAL_HEATING_WATER_SETPOINT,
-            // UnDefType.UNDEF);
-            // }
-            // updateState(OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_CENTRAL_HEATING_ENABLED,
-            // OnOffType.from(!gatewayCommand.getMessage().equals("0.0")));
-            // } else if (code == GatewayCommandCode.ControlSetpoint2) {
-            // if (gatewayCommand.getMessage().equals("0.0")) {
-            // updateState(OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_CENTRAL_HEATING2_WATER_SETPOINT,
-            // UnDefType.UNDEF);
-            // }
-            // updateState(OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_CENTRAL_HEATING2_ENABLED,
-            // OnOffType.from(!gatewayCommand.getMessage().equals("0.0")));
-            // }
-            // } else {
-            // connect();
-            // }
+                if (code == GatewayCommandCode.ControlSetpoint) {
+                    if (gatewayCommand.getMessage().equals("0.0")) {
+                        updateState(OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_CENTRAL_HEATING_WATER_SETPOINT,
+                                UnDefType.UNDEF);
+                    }
+                    updateState(OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_CENTRAL_HEATING_ENABLED,
+                            OnOffType.from(!gatewayCommand.getMessage().equals("0.0")));
+                } else if (code == GatewayCommandCode.ControlSetpoint2) {
+                    if (gatewayCommand.getMessage().equals("0.0")) {
+                        updateState(OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_CENTRAL_HEATING2_WATER_SETPOINT,
+                                UnDefType.UNDEF);
+                    }
+                    updateState(OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_CENTRAL_HEATING2_ENABLED,
+                            OnOffType.from(!gatewayCommand.getMessage().equals("0.0")));
+                }
+            }
         }
     }
 
@@ -149,7 +157,6 @@ public class GatewayHandler extends BaseBridgeHandler implements GatewayCallback
         }
     }
 
-    @Override
     public void receiveMessage(Message message) {
 
         int msgId = message.getID();
@@ -227,30 +234,28 @@ public class GatewayHandler extends BaseBridgeHandler implements GatewayCallback
         }
     }
 
-    // private @Nullable String getGatewayCodeFromChannel(String channel) throws IllegalArgumentException {
-    // switch (channel) {
-    // case OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_SETPOINT_TEMPORARY:
-    // return GatewayCommandCode.TemperatureTemporary;
-    // case OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_SETPOINT_CONSTANT:
-    // return GatewayCommandCode.TemperatureConstant;
-    // case OpenThermGatewayBindingConstants.CHANNEL_OUTSIDE_TEMPERATURE:
-    // return GatewayCommandCode.TemperatureOutside;
-    // case OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_DHW_SETPOINT:
-    // return GatewayCommandCode.SetpointWater;
-    // case OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_CENTRAL_HEATING_WATER_SETPOINT:
-    // return GatewayCommandCode.ControlSetpoint;
-    // case OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_CENTRAL_HEATING_ENABLED:
-    // return GatewayCommandCode.CentralHeating;
-    // case OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_CENTRAL_HEATING2_WATER_SETPOINT:
-    // return GatewayCommandCode.ControlSetpoint2;
-    // case OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_CENTRAL_HEATING2_ENABLED:
-    // return GatewayCommandCode.CentralHeating2;
-    // case OpenThermGatewayBindingConstants.CHANNEL_SEND_COMMAND:
-    // return null;
-    // default:
-    // throw new IllegalArgumentException(String.format("Unknown channel %s", channel));
-    // }
-    // }
-
-    public static final String CHANNEL_SEND_COMMAND = "sendcommand";
+    private @Nullable String getGatewayCodeFromChannel(String channel) throws IllegalArgumentException {
+        switch (channel) {
+            case OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_SETPOINT_TEMPORARY:
+                return GatewayCommandCode.TemperatureTemporary;
+            case OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_SETPOINT_CONSTANT:
+                return GatewayCommandCode.TemperatureConstant;
+            case OpenThermGatewayBindingConstants.CHANNEL_OUTSIDE_TEMPERATURE:
+                return GatewayCommandCode.TemperatureOutside;
+            case OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_DHW_SETPOINT:
+                return GatewayCommandCode.SetpointWater;
+            case OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_CENTRAL_HEATING_WATER_SETPOINT:
+                return GatewayCommandCode.ControlSetpoint;
+            case OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_CENTRAL_HEATING_ENABLED:
+                return GatewayCommandCode.CentralHeating;
+            case OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_CENTRAL_HEATING2_WATER_SETPOINT:
+                return GatewayCommandCode.ControlSetpoint2;
+            case OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_CENTRAL_HEATING2_ENABLED:
+                return GatewayCommandCode.CentralHeating2;
+            case OpenThermGatewayBindingConstants.CHANNEL_SEND_COMMAND:
+                return null;
+            default:
+                throw new IllegalArgumentException(String.format("Unknown channel %s", channel));
+        }
+    }
 }

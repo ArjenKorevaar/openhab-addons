@@ -8,7 +8,7 @@
 			<bridge-type-ref id="gateway"/>
 		</supported-bridge-type-refs>
 		<label>Boiler</label>
-		<description>Boiler</description>
+		<description>Boiler and thermostat</description>
 		<channels>
 			<channel id="roomtemp" typeId="roomtemp"/>
 			<channel id="roomsetpoint" typeId="roomsetpoint"/>

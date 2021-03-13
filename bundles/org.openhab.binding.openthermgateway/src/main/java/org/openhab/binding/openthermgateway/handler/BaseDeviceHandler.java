@@ -17,12 +17,17 @@ import javax.measure.Unit;
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.openthermgateway.internal.DataItem;
+import org.openhab.binding.openthermgateway.internal.DataItemGroup;
 import org.openhab.binding.openthermgateway.internal.Message;
 import org.openhab.core.library.types.DecimalType;
 import org.openhab.core.library.types.OnOffType;
 import org.openhab.core.library.types.QuantityType;
+import org.openhab.core.thing.Bridge;
 import org.openhab.core.thing.ChannelUID;
 import org.openhab.core.thing.Thing;
+import org.openhab.core.thing.ThingStatus;
+import org.openhab.core.thing.ThingStatusDetail;
+import org.openhab.core.thing.ThingStatusInfo;
 import org.openhab.core.thing.binding.BaseThingHandler;
 import org.openhab.core.types.Command;
 import org.openhab.core.types.State;
@@ -36,7 +41,7 @@ import org.slf4j.LoggerFactory;
  * @author Arjen Korevaar - Initial contribution
  */
 @NonNullByDefault
-public class BaseDeviceHandler extends BaseThingHandler {
+public abstract class BaseDeviceHandler extends BaseThingHandler {
 
     private final Logger logger = LoggerFactory.getLogger(BaseDeviceHandler.class);
 
@@ -46,70 +51,84 @@ public class BaseDeviceHandler extends BaseThingHandler {
 
     @Override
     public void initialize() {
+        Bridge bridge = getBridge();
+
+        if (bridge != null) {
+            bridgeStatusChanged(bridge.getStatusInfo());
+        } else {
+            updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.NONE, "Bridge is missing");
+        }
+    }
+
+    @Override
+    public void bridgeStatusChanged(ThingStatusInfo bridgeStatusInfo) {
+        if (bridgeStatusInfo.getStatus() == ThingStatus.ONLINE) {
+            updateStatus(ThingStatus.ONLINE);
+        } else {
+            updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.BRIDGE_OFFLINE);
+        }
     }
 
     @Override
     public void handleCommand(ChannelUID channelUID, Command command) {
+        Bridge bridge = getBridge();
+
+        if (bridge != null) {
+            GatewayHandler handler = (GatewayHandler) bridge.getHandler();
+            if (handler != null) {
+                handler.handleCommand(channelUID, command);
+            }
+        } else {
+            logger.debug("Bridge is missing");
+        }
     }
 
     public void receiveMessage(Message message) {
+        // Generic method to handle the update of a channel for any base Device type
+
+        DataItem[] dataItems = DataItemGroup.dataItemGroups.get(message.getID());
+
+        for (DataItem dataItem : dataItems) {
+            String channelId = dataItem.getSubject();
+
+            if (!supportsChannelId(channelId)
+                    || (dataItem.getFilteredCode() != null && dataItem.getFilteredCode() != message.getCode())) {
+                continue;
+            }
+
+            State state = null;
+
+            switch (dataItem.getDataType()) {
+                case FLAGS:
+                    state = OnOffType.from(message.getBit(dataItem.getByteType(), dataItem.getBitPos()));
+                    break;
+                case UINT8:
+                case UINT16:
+                    state = new DecimalType(message.getUInt(dataItem.getByteType()));
+                    break;
+                case INT8:
+                case INT16:
+                    state = new DecimalType(message.getInt(dataItem.getByteType()));
+                    break;
+                case FLOAT:
+                    float value = message.getFloat();
+                    @Nullable
+                    Unit<?> unit = dataItem.getUnit();
+                    state = (unit == null) ? new DecimalType(value) : new QuantityType<>(value, unit);
+                    break;
+                case DOWTOD:
+                    break;
+            }
+
+            if (state != null) {
+                logger.debug("Received update for channel '{}': {}", channelId, state);
+                updateState(channelId, state);
+            }
+        }
     }
 
-    public void updateState(Message message, DataItem dataItem) {
-        String channelId = dataItem.getSubject();
-
-        State state = null;
-
-        switch (dataItem.getDataType()) {
-            case FLAGS:
-                state = OnOffType.from(message.getBit(dataItem.getByteType(), dataItem.getBitPos()));
-                break;
-            case UINT8:
-            case UINT16:
-                state = new DecimalType(message.getUInt(dataItem.getByteType()));
-                break;
-            case INT8:
-            case INT16:
-                state = new DecimalType(message.getInt(dataItem.getByteType()));
-                break;
-            case FLOAT:
-                float value = message.getFloat();
-                @Nullable
-                Unit<?> unit = dataItem.getUnit();
-                state = (unit == null) ? new DecimalType(value) : new QuantityType<>(value, unit);
-                break;
-            case DOWTOD:
-                break;
-        }
-
-        if (state != null) {
-            logger.debug("Received update for channel '{}': {}", channelId, state);
-            updateState(channelId, state);
-        }
+    public boolean supportsChannelId(String channelId) {
+        // Overridden by derived Thing handlers
+        return false;
     }
-
-    // private @Nullable String getGatewayCodeFromChannel(String channel) throws IllegalArgumentException {
-    // switch (channel) {
-    // case OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_SETPOINT_TEMPORARY:
-    // return GatewayCommandCode.TemperatureTemporary;
-    // case OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_SETPOINT_CONSTANT:
-    // return GatewayCommandCode.TemperatureConstant;
-    // case OpenThermGatewayBindingConstants.CHANNEL_OUTSIDE_TEMPERATURE:
-    // return GatewayCommandCode.TemperatureOutside;
-    // case OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_DHW_SETPOINT:
-    // return GatewayCommandCode.SetpointWater;
-    // case OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_CENTRAL_HEATING_WATER_SETPOINT:
-    // return GatewayCommandCode.ControlSetpoint;
-    // case OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_CENTRAL_HEATING_ENABLED:
-    // return GatewayCommandCode.CentralHeating;
-    // case OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_CENTRAL_HEATING2_WATER_SETPOINT:
-    // return GatewayCommandCode.ControlSetpoint2;
-    // case OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_CENTRAL_HEATING2_ENABLED:
-    // return GatewayCommandCode.CentralHeating2;
-    // case OpenThermGatewayBindingConstants.CHANNEL_SEND_COMMAND:
-    // return null;
-    // default:
-    // throw new IllegalArgumentException(String.format("Unknown channel %s", channel));
-    // }
-    // }
 }

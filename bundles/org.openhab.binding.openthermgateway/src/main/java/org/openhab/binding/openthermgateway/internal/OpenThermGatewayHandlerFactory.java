@@ -16,7 +16,6 @@ import java.util.Set;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
-import org.openhab.binding.openthermgateway.OpenThermGatewayBindingConstants;
 import org.openhab.binding.openthermgateway.handler.BoilerHandler;
 import org.openhab.binding.openthermgateway.handler.GatewayHandler;
 import org.openhab.binding.openthermgateway.handler.VentilationHeatRecoveryHandler;
@@ -37,10 +36,15 @@ import org.osgi.service.component.annotations.Component;
 @Component(service = ThingHandlerFactory.class, configurationPid = "binding.openthermgateway")
 @NonNullByDefault
 public class OpenThermGatewayHandlerFactory extends BaseThingHandlerFactory {
+    private static final String BINDING_ID = "openthermgateway";
 
-    private static final Set<ThingTypeUID> SUPPORTED_THING_TYPE_UIDS = Set.of(
-            OpenThermGatewayBindingConstants.GATEWAY_THING_TYPE_UID,
-            OpenThermGatewayBindingConstants.BOILER_THING_TYPE_UID, OpenThermGatewayBindingConstants.VH_THING_TYPE_UID);
+    // List of all Thing Type UID's
+    public static final ThingTypeUID GATEWAY_THING_TYPE_UID = new ThingTypeUID(BINDING_ID, "gateway");
+    public static final ThingTypeUID BOILER_THING_TYPE_UID = new ThingTypeUID(BINDING_ID, "boiler");
+    public static final ThingTypeUID VH_THING_TYPE_UID = new ThingTypeUID(BINDING_ID, "ventilationheatrecovery");
+
+    public static final Set<ThingTypeUID> SUPPORTED_THING_TYPE_UIDS = Set.of(GATEWAY_THING_TYPE_UID,
+            BOILER_THING_TYPE_UID, VH_THING_TYPE_UID);
 
     @Override
     public boolean supportsThingType(ThingTypeUID thingTypeUID) {
@@ -51,11 +55,11 @@ public class OpenThermGatewayHandlerFactory extends BaseThingHandlerFactory {
     protected @Nullable ThingHandler createHandler(Thing thing) {
         ThingTypeUID thingTypeUID = thing.getThingTypeUID();
 
-        if (thingTypeUID.equals(OpenThermGatewayBindingConstants.GATEWAY_THING_TYPE_UID)) {
+        if (thingTypeUID.equals(GATEWAY_THING_TYPE_UID)) {
             return new GatewayHandler((Bridge) thing);
-        } else if (thingTypeUID.equals(OpenThermGatewayBindingConstants.BOILER_THING_TYPE_UID)) {
+        } else if (thingTypeUID.equals(BOILER_THING_TYPE_UID)) {
             return new BoilerHandler(thing);
-        } else if (thingTypeUID.equals(OpenThermGatewayBindingConstants.VH_THING_TYPE_UID)) {
+        } else if (thingTypeUID.equals(VH_THING_TYPE_UID)) {
             return new VentilationHeatRecoveryHandler(thing);
         }
 

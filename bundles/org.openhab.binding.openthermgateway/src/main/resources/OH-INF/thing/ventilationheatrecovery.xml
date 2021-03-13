@@ -8,7 +8,7 @@
 			<bridge-type-ref id="gateway"/>
 		</supported-bridge-type-refs>
 		<label>Ventilation / Heat Recovery</label>
-		<description>Ventilation / Heat recovery</description>
+		<description>Ventilation or Heat Recovery unit</description>
 		<channels>
 			<channel id="roomtemp" typeId="roomtemp"/>
 			<channel id="oemfaultcode" typeId="oemfaultcode"/>
