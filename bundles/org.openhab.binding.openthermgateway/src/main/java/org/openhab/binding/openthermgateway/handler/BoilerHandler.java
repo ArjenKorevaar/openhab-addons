@@ -48,6 +48,8 @@ public class BoilerHandler extends BaseDeviceHandler {
         // continue;
         // }
 
+        DataItem[] dataItems = DataItemGroup.dataItemGroups.get(message.getID());
+
         for (DataItem dataItem : dataItems) {
             String channelId = dataItem.getSubject();
 

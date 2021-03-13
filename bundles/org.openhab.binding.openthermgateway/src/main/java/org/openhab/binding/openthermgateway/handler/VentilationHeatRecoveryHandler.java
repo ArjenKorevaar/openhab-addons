@@ -49,6 +49,8 @@ public class VentilationHeatRecoveryHandler extends BaseDeviceHandler {
         // || (dataItem.getFilteredCode() != null && dataItem.getFilteredCode() != message.getCode())) {
         // continue;
         // }
+
+        DataItem[] dataItems = DataItemGroup.dataItemGroups.get(message.getID());
         
         for (DataItem dataItem : dataItems) {
             String channelId = dataItem.getSubject();
