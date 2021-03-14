@@ -286,6 +286,213 @@
 		<state readOnly="true"/>
 	</channel-type>
 
+
+
+	<channel-type id="vh_ventilationenable">
+		<item-type>Switch</item-type>
+		<label>Ventilation Enabled</label>
+		<description>Ventilation enabled</description>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="vh_bypassposition">
+		<item-type>Switch</item-type>
+		<label>Bypass Position</label>
+		<description>Bypass position</description>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="vh_bypassmode">
+		<item-type>Switch</item-type>
+		<label>Bypass Mode</label>
+		<description>Bypass mode</description>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="vh_freeventilationmode">
+		<item-type>Switch</item-type>
+		<label>Free Ventilation Mode</label>
+		<description>Free ventilation mode</description>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="vh_faultindication">
+		<item-type>Switch</item-type>
+		<label>Fault Indication</label>
+		<description>Fault indication</description>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="vh_ventilationmode">
+		<item-type>Switch</item-type>
+		<label>Ventilation Mode</label>
+		<description>Ventilation mode</description>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="vh_bypassstatus">
+		<item-type>Switch</item-type>
+		<label>Bypass Status</label>
+		<description>Bypass status</description>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="vh_bypassautomaticstatus">
+		<item-type>Switch</item-type>
+		<label>Bypass Automatic Status</label>
+		<description>Bypass automatic status</description>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="vh_freeventilationstatus">
+		<item-type>Switch</item-type>
+		<label>Free Ventilation Status</label>
+		<description>Free ventilation status</description>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="vh_diagnosticindication">
+		<item-type>Switch</item-type>
+		<label>Diagnostic Indication</label>
+		<description>Diagnostic indication</description>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="vh_controlsetpoint">
+		<item-type>Number:Temperature</item-type>
+		<label>Control Setpoint</label>
+		<description>Control setpoint</description>
+		<state readOnly="true" pattern="%.1f %unit%"/>
+	</channel-type>
+
+	<channel-type id="vh_diagnosticcode">
+		<item-type>Number:Dimensionless</item-type>
+		<label>Diagnostic Code</label>
+		<description>Diagnostic code</description>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="vh_systemtype">
+		<item-type>Switch</item-type>
+		<label>System Type</label>
+		<description>System type</description>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="vh_bypass">
+		<item-type>Switch</item-type>
+		<label>Bypass</label>
+		<description>Bypass</description>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="vh_speedcontrol">
+		<item-type>Switch</item-type>
+		<label>Speed Control</label>
+		<description>Speed control</description>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="vh_memberid">
+		<item-type>Number:Dimensionless</item-type>
+		<label>Member ID</label>
+		<description>Member ID</description>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="vh_openthermversion">
+		<item-type>Number:Dimensionless</item-type>
+		<label>OpenTherm Version</label>
+		<description>OpenTherm version</description>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="vh_versiontype">
+		<item-type>Number:Dimensionless</item-type>
+		<label>Version Type</label>
+		<description>Version type</description>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="vh_relativeventilation">
+		<item-type>Number:Dimensionless</item-type>
+		<label>Relative Ventilation</label>
+		<description>Relative ventilation</description>
+		<state readOnly="true" pattern="%.1f %%"/>
+	</channel-type>
+
+	<channel-type id="vh_co2level">
+		<item-type>Number:Dimensionless</item-type>
+		<label>CO2 Level</label>
+		<description>CO2 level</description>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="vh_supplyinlettemp">
+		<item-type>Number:Temperature</item-type>
+		<label>Supply Inlet Temperature</label>
+		<description>Supply inlet temperature</description>
+		<state readOnly="true" pattern="%.1f %unit%"/>
+	</channel-type>
+
+	<channel-type id="vh_supplyoutlettemp">
+		<item-type>Number:Temperature</item-type>
+		<label>Supply Outlet Temperature</label>
+		<description>Supply outlet temperature</description>
+		<state readOnly="true" pattern="%.1f %unit%"/>
+	</channel-type>
+
+	<channel-type id="vh_exhaustinlettemp">
+		<item-type>Number:Temperature</item-type>
+		<label>Exhaust Inlet Temperature</label>
+		<description>Exhaust inlet temperature</description>
+		<state readOnly="true" pattern="%.1f %unit%"/>
+	</channel-type>
+
+	<channel-type id="vh_exhaustoutlettemp">
+		<item-type>Number:Temperature</item-type>
+		<label>Exhaust Outlet Temperature</label>
+		<description>Exhaust outlet temperature</description>
+		<state readOnly="true" pattern="%.1f %unit%"/>
+	</channel-type>
+
+	<channel-type id="vh_actualexhaustfanspeed">
+		<item-type>Number:Dimensionless</item-type>
+		<label>Actual Exhaust Fan Speed</label>
+		<description>Actual exhaust fan speed</description>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="vh_actualinletfanspeed">
+		<item-type>Number:Dimensionless</item-type>
+		<label>Actual Inlet Fan Speed</label>
+		<description>Actual inlet fan speed</description>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="vh_nominalventilationvalue">
+		<item-type>Number:Dimensionless</item-type>
+		<label>Nominal Ventilation Value</label>
+		<description>Nominal ventilation value</description>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="vh_tspnumber">
+		<item-type>Number:Dimensionless</item-type>
+		<label>TSP Number</label>
+		<description>Number of Transparent-Slave-Parameters</description>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="vh_tspentry">
+		<item-type>Number:Dimensionless</item-type>
+		<label>TSP Entry</label>
+		<description>TSP entry</description>
+		<state readOnly="true"/>
+	</channel-type>
+
+
+
 	<channel-type id="sendcommand">
 		<item-type>String</item-type>
 		<label>Send Command</label>

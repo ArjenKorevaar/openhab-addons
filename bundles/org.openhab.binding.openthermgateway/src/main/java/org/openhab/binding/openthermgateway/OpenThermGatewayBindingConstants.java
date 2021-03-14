@@ -65,7 +65,6 @@ public class OpenThermGatewayBindingConstants {
     public static final String CHANNEL_OEM_FAULTCODE = "oemfaultcode";
     public static final String CHANNEL_DIAGNOSTICS_INDICATION = "diag";
 
-
     public static final String CHANNEL_VH_VENTILATION_ENABLE = "vh_ventilationenable";
     public static final String CHANNEL_VH_BYPASS_POSITION = "vh_bypassposition";
     public static final String CHANNEL_VH_BYPASS_MODE = "vh_bypassmode";
@@ -95,5 +94,4 @@ public class OpenThermGatewayBindingConstants {
     public static final String CHANNEL_VH_NOMINAL_VENTILATION_VALUE = "vh_nominalventilationvalue";
     public static final String CHANNEL_VH_TSP_NUMBER = "vh_tspnumber";
     public static final String CHANNEL_VH_TSP_ENTRY = "vh_tspentry";
-
 }
