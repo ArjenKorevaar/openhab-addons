@@ -15,16 +15,16 @@ package org.openhab.binding.openthermgateway.internal;
 import org.eclipse.jdt.annotation.NonNullByDefault;
 
 /**
- * The {@link GatewayConfiguration} class contains fields mapping thing configuration parameters.
- *
+ * The {@link OpenThermGatewayConnector} interface is used to allow multiple types of connectors
+ * to be implemented and used to connect to the OpenTherm Gateway.
+ * 
  * @author Arjen Korevaar - Initial contribution
  */
 @NonNullByDefault
-public class GatewayConfiguration {
+public interface OpenThermGatewayConnector extends Runnable {
+    void sendCommand(GatewayCommand command);
 
-    public String ipaddress = "";
+    boolean isConnected();
 
-    public int port = 0;
-
-    public int connectionRetryInterval = 60;
+    void stop();
 }

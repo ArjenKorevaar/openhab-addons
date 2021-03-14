@@ -17,7 +17,7 @@ import java.util.Set;
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.openthermgateway.handler.BoilerHandler;
-import org.openhab.binding.openthermgateway.handler.GatewayHandler;
+import org.openhab.binding.openthermgateway.handler.OpenThermGatewayHandler;
 import org.openhab.binding.openthermgateway.handler.VentilationHeatRecoveryHandler;
 import org.openhab.core.thing.Bridge;
 import org.openhab.core.thing.Thing;
@@ -39,11 +39,12 @@ public class OpenThermGatewayHandlerFactory extends BaseThingHandlerFactory {
     private static final String BINDING_ID = "openthermgateway";
 
     // List of all Thing Type UID's
-    public static final ThingTypeUID GATEWAY_THING_TYPE_UID = new ThingTypeUID(BINDING_ID, "gateway");
+    public static final ThingTypeUID OPENTHERM_GATEWAY_THING_TYPE_UID = new ThingTypeUID(BINDING_ID,
+            "openthermgateway");
     public static final ThingTypeUID BOILER_THING_TYPE_UID = new ThingTypeUID(BINDING_ID, "boiler");
     public static final ThingTypeUID VH_THING_TYPE_UID = new ThingTypeUID(BINDING_ID, "ventilationheatrecovery");
 
-    public static final Set<ThingTypeUID> SUPPORTED_THING_TYPE_UIDS = Set.of(GATEWAY_THING_TYPE_UID,
+    public static final Set<ThingTypeUID> SUPPORTED_THING_TYPE_UIDS = Set.of(OPENTHERM_GATEWAY_THING_TYPE_UID,
             BOILER_THING_TYPE_UID, VH_THING_TYPE_UID);
 
     @Override
@@ -55,8 +56,8 @@ public class OpenThermGatewayHandlerFactory extends BaseThingHandlerFactory {
     protected @Nullable ThingHandler createHandler(Thing thing) {
         ThingTypeUID thingTypeUID = thing.getThingTypeUID();
 
-        if (thingTypeUID.equals(GATEWAY_THING_TYPE_UID)) {
-            return new GatewayHandler((Bridge) thing);
+        if (thingTypeUID.equals(OPENTHERM_GATEWAY_THING_TYPE_UID)) {
+            return new OpenThermGatewayHandler((Bridge) thing);
         } else if (thingTypeUID.equals(BOILER_THING_TYPE_UID)) {
             return new BoilerHandler(thing);
         } else if (thingTypeUID.equals(VH_THING_TYPE_UID)) {

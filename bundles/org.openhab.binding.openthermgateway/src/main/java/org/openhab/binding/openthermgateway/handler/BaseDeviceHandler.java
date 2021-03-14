@@ -74,7 +74,7 @@ public abstract class BaseDeviceHandler extends BaseThingHandler {
         Bridge bridge = getBridge();
 
         if (bridge != null) {
-            GatewayHandler handler = (GatewayHandler) bridge.getHandler();
+            OpenThermGatewayHandler handler = (OpenThermGatewayHandler) bridge.getHandler();
             if (handler != null) {
                 handler.handleCommand(channelUID, command);
             }
@@ -84,15 +84,16 @@ public abstract class BaseDeviceHandler extends BaseThingHandler {
     }
 
     public void receiveMessage(Message message) {
-        // Generic method to handle the update of a channel for any base Device type
-
         DataItem[] dataItems = DataItemGroup.dataItemGroups.get(message.getID());
 
         for (DataItem dataItem : dataItems) {
             String channelId = dataItem.getSubject();
 
-            if (!supportsChannelId(channelId)
-                    || (dataItem.getFilteredCode() != null && dataItem.getFilteredCode() != message.getCode())) {
+            if (!supportsChannelId(channelId)) {
+                continue;
+            }
+
+            if (dataItem.getFilteredCode() != null && dataItem.getFilteredCode() != message.getCode()) {
                 continue;
             }
 
@@ -128,7 +129,7 @@ public abstract class BaseDeviceHandler extends BaseThingHandler {
     }
 
     public boolean supportsChannelId(String channelId) {
-        // Overridden by derived Thing handlers
+        // Overridden by Thing handlers
         return false;
     }
 }

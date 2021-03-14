@@ -296,17 +296,27 @@
 	</channel-type>
 
 	<channel-type id="vh_bypassposition">
-		<item-type>Switch</item-type>
+		<item-type>Number:Dimensionless</item-type>
 		<label>Bypass Position</label>
 		<description>Bypass position</description>
-		<state readOnly="true"/>
+		<state readOnly="true">
+			<options>
+				<option value="0">close</option>
+				<option value="1">open</option>
+			</options>
+		</state>
 	</channel-type>
 
 	<channel-type id="vh_bypassmode">
-		<item-type>Switch</item-type>
+		<item-type>Number:Dimensionless</item-type>
 		<label>Bypass Mode</label>
 		<description>Bypass mode</description>
-		<state readOnly="true"/>
+		<state readOnly="true">
+			<options>
+				<option value="0">manual</option>
+				<option value="1">automatic</option>
+			</options>
+		</state>
 	</channel-type>
 
 	<channel-type id="vh_freeventilationmode">
@@ -338,10 +348,15 @@
 	</channel-type>
 
 	<channel-type id="vh_bypassautomaticstatus">
-		<item-type>Switch</item-type>
+		<item-type>Number:Dimensionless</item-type>
 		<label>Bypass Automatic Status</label>
 		<description>Bypass automatic status</description>
-		<state readOnly="true"/>
+		<state readOnly="true">
+			<options>
+				<option value="0">manual</option>
+				<option value="1">automatic</option>
+			</options>
+		</state>
 	</channel-type>
 
 	<channel-type id="vh_freeventilationstatus">
@@ -359,10 +374,45 @@
 	</channel-type>
 
 	<channel-type id="vh_controlsetpoint">
-		<item-type>Number:Temperature</item-type>
+		<item-type>Number:Dimensionless</item-type>
 		<label>Control Setpoint</label>
 		<description>Control setpoint</description>
-		<state readOnly="true" pattern="%.1f %unit%"/>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="vh_servicerequest">
+		<item-type>Switch</item-type>
+		<label>Service Request</label>
+		<description>Service request</description>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="vh_exhaustfanfault">
+		<item-type>Switch</item-type>
+		<label>Exhaust Fan Fault</label>
+		<description>Exhaust fan fault</description>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="vh_inletfanfault">
+		<item-type>Switch</item-type>
+		<label>Inlet Fan Fault</label>
+		<description>Inlet fan fault</description>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="vh_frostprotection">
+		<item-type>Switch</item-type>
+		<label>Frost Protection</label>
+		<description>Frost protection</description>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="vh_faultcode">
+		<item-type>Number:Dimensionless</item-type>
+		<label>Fault Code</label>
+		<description>Fault code</description>
+		<state readOnly="true"/>
 	</channel-type>
 
 	<channel-type id="vh_diagnosticcode">
@@ -373,10 +423,15 @@
 	</channel-type>
 
 	<channel-type id="vh_systemtype">
-		<item-type>Switch</item-type>
+		<item-type>Number:Dimensionless</item-type>
 		<label>System Type</label>
 		<description>System type</description>
-		<state readOnly="true"/>
+		<state readOnly="true">
+			<options>
+				<option value="0">central exaust</option>
+				<option value="1">heat-recovery</option>
+			</options>
+		</state>
 	</channel-type>
 
 	<channel-type id="vh_bypass">
@@ -387,10 +442,15 @@
 	</channel-type>
 
 	<channel-type id="vh_speedcontrol">
-		<item-type>Switch</item-type>
+		<item-type>Number:Dimensionless</item-type>
 		<label>Speed Control</label>
 		<description>Speed control</description>
-		<state readOnly="true"/>
+		<state readOnly="true">
+			<options>
+				<option value="0">3-speed</option>
+				<option value="1">variable</option>
+			</options>
+		</state>
 	</channel-type>
 
 	<channel-type id="vh_memberid">
@@ -417,15 +477,22 @@
 	<channel-type id="vh_relativeventilation">
 		<item-type>Number:Dimensionless</item-type>
 		<label>Relative Ventilation</label>
-		<description>Relative ventilation</description>
-		<state readOnly="true" pattern="%.1f %%"/>
+		<description>Relative ventilation position</description>
+		<state readOnly="true" pattern="%d %%"/>
+	</channel-type>
+
+	<channel-type id="vh_relativehumidity">
+		<item-type>Number:Dimensionless</item-type>
+		<label>Relative Humidity</label>
+		<description>Relative humidity exhaust air</description>
+		<state readOnly="true" pattern="%d %%"/>
 	</channel-type>
 
 	<channel-type id="vh_co2level">
 		<item-type>Number:Dimensionless</item-type>
 		<label>CO2 Level</label>
-		<description>CO2 level</description>
-		<state readOnly="true"/>
+		<description>CO2 level exhaust air</description>
+		<state readOnly="true" pattern="%d ppm"/>
 	</channel-type>
 
 	<channel-type id="vh_supplyinlettemp">
@@ -460,21 +527,40 @@
 		<item-type>Number:Dimensionless</item-type>
 		<label>Actual Exhaust Fan Speed</label>
 		<description>Actual exhaust fan speed</description>
-		<state readOnly="true"/>
+		<state readOnly="true" pattern="%d rpm"/>
 	</channel-type>
 
 	<channel-type id="vh_actualinletfanspeed">
 		<item-type>Number:Dimensionless</item-type>
 		<label>Actual Inlet Fan Speed</label>
 		<description>Actual inlet fan speed</description>
+		<state readOnly="true" pattern="%d rpm"/>
+	</channel-type>
+
+	<channel-type id="vh_nominalventenable">
+		<item-type>Switch</item-type>
+		<label>Nominal Ventilation Value Transfer</label>
+		<description>Nominal ventilation value transfer enabled</description>
 		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="vh_nominalventrw">
+		<item-type>Number:Dimensionless</item-type>
+		<label>Nominal Ventilation Value</label>
+		<description>Nominal ventilation value</description>
+		<state readOnly="true">
+			<options>
+				<option value="0">read-only</option>
+				<option value="1">read/write</option>
+			</options>
+		</state>
 	</channel-type>
 
 	<channel-type id="vh_nominalventilationvalue">
 		<item-type>Number:Dimensionless</item-type>
 		<label>Nominal Ventilation Value</label>
 		<description>Nominal ventilation value</description>
-		<state readOnly="true"/>
+		<state readOnly="true" pattern="%d %%"/>
 	</channel-type>
 
 	<channel-type id="vh_tspnumber">

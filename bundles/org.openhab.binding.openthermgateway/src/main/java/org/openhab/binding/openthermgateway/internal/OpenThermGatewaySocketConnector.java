@@ -32,19 +32,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The {@link GatewaySocketConnector} is responsible for handling the socket connection
+ * The {@link OpenThermGatewaySocketConnector} is responsible for handling the socket connection
  *
  * @author Arjen Korevaar - Initial contribution
  * @author Arjan Mels - Improved robustness by re-sending commands, handling all message types (not only Boiler)
  */
 @NonNullByDefault
-public class GatewaySocketConnector implements GatewayConnector {
+public class OpenThermGatewaySocketConnector implements OpenThermGatewayConnector {
     private static final int COMMAND_RESPONSE_TIME_MILLISECONDS = 100;
     private static final int COMMAND_TIMEOUT_MILLISECONDS = 5000;
 
-    private final Logger logger = LoggerFactory.getLogger(GatewaySocketConnector.class);
+    private final Logger logger = LoggerFactory.getLogger(OpenThermGatewaySocketConnector.class);
 
-    private final GatewayCallback callback;
+    private final OpenThermGatewayCallback callback;
     private final String ipaddress;
     private final int port;
 
@@ -55,7 +55,7 @@ public class GatewaySocketConnector implements GatewayConnector {
 
     private Map<String, Entry<Long, GatewayCommand>> pendingCommands = new ConcurrentHashMap<>();
 
-    public GatewaySocketConnector(GatewayCallback callback, String ipaddress, int port) {
+    public OpenThermGatewaySocketConnector(OpenThermGatewayCallback callback, String ipaddress, int port) {
         this.callback = callback;
         this.ipaddress = ipaddress;
         this.port = port;
@@ -66,7 +66,7 @@ public class GatewaySocketConnector implements GatewayConnector {
         stopping = false;
         connected = false;
 
-        logger.debug("Connecting GatewaySocketConnector to {}:{}", this.ipaddress, this.port);
+        logger.debug("Connecting OpenThermGatewaySocketConnector to {}:{}", this.ipaddress, this.port);
 
         callback.connecting();
 
@@ -78,7 +78,7 @@ public class GatewaySocketConnector implements GatewayConnector {
 
             callback.connected();
 
-            logger.debug("GatewaySocketConnector connected");
+            logger.debug("OpenThermGatewaySocketConnector connected");
 
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     PrintWriter wrt = new PrintWriter(socket.getOutputStream(), true)) {
@@ -101,11 +101,11 @@ public class GatewaySocketConnector implements GatewayConnector {
                     }
                 }
 
-                logger.debug("Stopping GatewaySocketConnector");
+                logger.debug("Stopping OpenThermGatewaySocketConnector");
             } finally {
                 connected = false;
 
-                logger.debug("GatewaySocketConnector disconnected");
+                logger.debug("OpenThermGatewaySocketConnector disconnected");
                 callback.disconnected();
             }
         } catch (IOException ex) {
@@ -116,7 +116,7 @@ public class GatewaySocketConnector implements GatewayConnector {
 
     @Override
     public void stop() {
-        logger.debug("Stopping GatewaySocketConnector");
+        logger.debug("Stopping OpenThermGatewaySocketConnector");
         stopping = true;
     }
 
@@ -142,7 +142,7 @@ public class GatewaySocketConnector implements GatewayConnector {
                 wrtr.flush();
             }
         } else {
-            logger.debug("Unable to send message: {}. GatewaySocketConnector is not connected.", msg);
+            logger.debug("Unable to send message: {}. OpenThermGatewaySocketConnector is not connected.", msg);
         }
     }
 

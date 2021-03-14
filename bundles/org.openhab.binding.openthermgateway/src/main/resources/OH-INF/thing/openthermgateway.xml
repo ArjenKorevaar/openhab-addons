@@ -3,7 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:thing="https://openhab.org/schemas/thing-description/v1.0.0"
 	xsi:schemaLocation="https://openhab.org/schemas/thing-description/v1.0.0 https://openhab.org/schemas/thing-description-1.0.0.xsd">
-	<bridge-type id="gateway">
+	<bridge-type id="openthermgateway">
 		<label>OpenTherm Gateway</label>
 		<description>OpenTherm Gateway</description>
 		<channels>
@@ -12,7 +12,7 @@
 		<properties>
 			<property name="version">1.2.0</property>
 		</properties>
-		<config-description-ref uri="thing-type:openthermgateway:gateway"/>
+		<config-description-ref uri="thing-type:openthermgateway:openthermgateway"/>
 	</bridge-type>
 
 </thing:thing-descriptions>

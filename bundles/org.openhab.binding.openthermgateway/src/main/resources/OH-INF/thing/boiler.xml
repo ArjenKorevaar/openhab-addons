@@ -5,7 +5,7 @@
 	xsi:schemaLocation="https://openhab.org/schemas/thing-description/v1.0.0 https://openhab.org/schemas/thing-description-1.0.0.xsd">
 	<thing-type id="boiler">
 		<supported-bridge-type-refs>
-			<bridge-type-ref id="gateway"/>
+			<bridge-type-ref id="openthermgateway"/>
 		</supported-bridge-type-refs>
 		<label>Boiler</label>
 		<description>Boiler and thermostat</description>

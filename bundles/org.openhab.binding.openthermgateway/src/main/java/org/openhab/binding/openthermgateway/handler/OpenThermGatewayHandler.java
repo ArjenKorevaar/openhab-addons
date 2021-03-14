@@ -19,13 +19,13 @@ import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.openthermgateway.OpenThermGatewayBindingConstants;
 import org.openhab.binding.openthermgateway.internal.DataItemGroup;
-import org.openhab.binding.openthermgateway.internal.GatewayCallback;
 import org.openhab.binding.openthermgateway.internal.GatewayCommand;
 import org.openhab.binding.openthermgateway.internal.GatewayCommandCode;
-import org.openhab.binding.openthermgateway.internal.GatewayConfiguration;
-import org.openhab.binding.openthermgateway.internal.GatewayConnector;
-import org.openhab.binding.openthermgateway.internal.GatewaySocketConnector;
 import org.openhab.binding.openthermgateway.internal.Message;
+import org.openhab.binding.openthermgateway.internal.OpenThermGatewayCallback;
+import org.openhab.binding.openthermgateway.internal.OpenThermGatewayConfiguration;
+import org.openhab.binding.openthermgateway.internal.OpenThermGatewayConnector;
+import org.openhab.binding.openthermgateway.internal.OpenThermGatewaySocketConnector;
 import org.openhab.core.library.types.OnOffType;
 import org.openhab.core.library.types.QuantityType;
 import org.openhab.core.library.unit.SIUnits;
@@ -42,45 +42,42 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The {@link GatewayHandler} is responsible for handling commands, which are
+ * The {@link OpenThermGatewayHandler} is responsible for handling commands, which are
  * sent to one of the channels.
  *
  * @author Arjen Korevaar - Initial contribution
  */
 @NonNullByDefault
-public class GatewayHandler extends BaseBridgeHandler implements GatewayCallback {
+public class OpenThermGatewayHandler extends BaseBridgeHandler implements OpenThermGatewayCallback {
 
-    private final Logger logger = LoggerFactory.getLogger(GatewayHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(OpenThermGatewayHandler.class);
 
-    private @Nullable GatewayConfiguration config;
-    private @Nullable GatewayConnector connector;
+    private @Nullable OpenThermGatewayConfiguration config;
+    private @Nullable OpenThermGatewayConnector connector;
     private @Nullable ScheduledFuture<?> reconnectTask;
 
     private boolean connecting = false;
     private boolean explicitDisconnect = false;
 
-    public GatewayHandler(Bridge bridge) {
+    public OpenThermGatewayHandler(Bridge bridge) {
         super(bridge);
     }
 
     @Override
     public void initialize() {
-        logger.debug("Initializing Gateway handler for uid '{}'", getThing().getUID());
+        logger.debug("Initializing OpenTherm Gateway handler for uid '{}'", getThing().getUID());
 
         updateStatus(ThingStatus.UNKNOWN, ThingStatusDetail.NONE, "Initializing");
 
-        config = getConfigAs(GatewayConfiguration.class);
+        config = getConfigAs(OpenThermGatewayConfiguration.class);
 
         connect();
-    }
-
-    public void sendCommand() {
     }
 
     @Override
     public void handleCommand(ChannelUID channelUID, Command command) {
         @Nullable
-        GatewayConnector conn = connector;
+        OpenThermGatewayConnector conn = connector;
 
         logger.debug("Received command {} {}", channelUID, command);
 
@@ -144,7 +141,7 @@ public class GatewayHandler extends BaseBridgeHandler implements GatewayCallback
     @Override
     public void disconnected() {
         @Nullable
-        GatewayConfiguration conf = config;
+        OpenThermGatewayConfiguration conf = config;
 
         connecting = false;
 
@@ -158,11 +155,8 @@ public class GatewayHandler extends BaseBridgeHandler implements GatewayCallback
     }
 
     public void receiveMessage(Message message) {
-
-        int msgId = message.getID();
-
-        if (!DataItemGroup.dataItemGroups.containsKey(msgId)) {
-            logger.debug("Unsupported message id {}", msgId);
+        if (!DataItemGroup.dataItemGroups.containsKey(message.getID())) {
+            logger.debug("Unsupported message id {}", message.getID());
             return;
         }
 
@@ -174,7 +168,7 @@ public class GatewayHandler extends BaseBridgeHandler implements GatewayCallback
 
     @Override
     public void handleRemoval() {
-        logger.debug("Removing Gateway handler");
+        logger.debug("Removing OpenTherm Gateway handler");
         disconnect();
         super.handleRemoval();
     }
@@ -194,39 +188,39 @@ public class GatewayHandler extends BaseBridgeHandler implements GatewayCallback
 
     private void connect() {
         @Nullable
-        GatewayConfiguration conf = config;
+        OpenThermGatewayConfiguration conf = config;
 
         explicitDisconnect = false;
 
         if (connecting) {
-            logger.debug("Gateway connector is already connecting ...");
+            logger.debug("OpenTherm Gateway connector is already connecting ...");
             return;
         }
 
         disconnect();
 
         if (conf != null) {
-            logger.debug("Starting Gateway connector");
+            logger.debug("Starting OpenTherm Gateway connector");
 
-            connector = new GatewaySocketConnector(this, conf.ipaddress, conf.port);
+            connector = new OpenThermGatewaySocketConnector(this, conf.ipaddress, conf.port);
 
             Thread thread = new Thread(connector, "OpenTherm Gateway Binding - socket listener thread");
             thread.setDaemon(true);
             thread.start();
 
-            logger.debug("Gateway connector started");
+            logger.debug("OpenTherm Gateway connector started");
         }
     }
 
     private void disconnect() {
         @Nullable
-        GatewayConnector conn = connector;
+        OpenThermGatewayConnector conn = connector;
 
         explicitDisconnect = true;
 
         if (conn != null) {
             if (conn.isConnected()) {
-                logger.debug("Stopping Gateway connector");
+                logger.debug("Stopping OpenTherm Gateway connector");
                 conn.stop();
             }
 
