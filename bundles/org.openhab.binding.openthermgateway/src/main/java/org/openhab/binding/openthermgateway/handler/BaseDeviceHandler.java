@@ -16,8 +16,10 @@ import javax.measure.Unit;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
+import org.openhab.binding.openthermgateway.internal.ByteType;
 import org.openhab.binding.openthermgateway.internal.DataItem;
 import org.openhab.binding.openthermgateway.internal.DataItemGroup;
+import org.openhab.binding.openthermgateway.internal.DataType;
 import org.openhab.binding.openthermgateway.internal.Message;
 import org.openhab.core.library.types.DecimalType;
 import org.openhab.core.library.types.OnOffType;
@@ -35,8 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The {@link BaseDeviceHandler} is responsible for handling commands, which are
- * sent to one of the channels.
+ * The {@link BaseDeviceHandler} is a base class for actual Things.
  *
  * @author Arjen Korevaar - Initial contribution
  */
@@ -87,13 +88,23 @@ public abstract class BaseDeviceHandler extends BaseThingHandler {
         DataItem[] dataItems = DataItemGroup.dataItemGroups.get(message.getID());
 
         for (DataItem dataItem : dataItems) {
-            String channelId = dataItem.getSubject();
 
-            if (!supportsChannelId(channelId)) {
-                continue;
+            String channelId = dataItem.getSubject();
+            DataType dataType = dataItem.getDataType();
+
+            if (dataType == DataType.TSP) {
+                // With TSPs, the index is HIGHBYTE, the value is LOWBYTE
+                int index = message.getUInt(ByteType.HIGHBYTE);
+                channelId = "tsp_entry_" + index;
+            }
+
+            if (thing.getChannel(channelId) == null) {
+                // Channel doesn't exist
+                return;
             }
 
             if (dataItem.getFilteredCode() != null && dataItem.getFilteredCode() != message.getCode()) {
+                // Channel is not bound to the specific TRBA code
                 continue;
             }
 
@@ -111,6 +122,11 @@ public abstract class BaseDeviceHandler extends BaseThingHandler {
                 case INT16:
                     state = new DecimalType(message.getInt(dataItem.getByteType()));
                     break;
+                case TSP:
+                    // With TSPs, the index is HIGHBYTE, the value is LOWBYTE
+                    // TSP values are treated as Number:Dimensionless
+                    state = new DecimalType(message.getUInt(ByteType.LOWBYTE));
+                    break;
                 case FLOAT:
                     float value = message.getFloat();
                     @Nullable
@@ -126,10 +142,5 @@ public abstract class BaseDeviceHandler extends BaseThingHandler {
                 updateState(channelId, state);
             }
         }
-    }
-
-    public boolean supportsChannelId(String channelId) {
-        // Overridden by Thing handlers
-        return false;
     }
 }

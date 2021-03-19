@@ -42,8 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The {@link OpenThermGatewayHandler} is responsible for handling commands, which are
- * sent to one of the channels.
+ * The {@link OpenThermGatewayHandler} is responsible for communication to the OpenTherm Gateway device.
  *
  * @author Arjen Korevaar - Initial contribution
  */
@@ -76,8 +75,6 @@ public class OpenThermGatewayHandler extends BaseBridgeHandler implements OpenTh
 
     @Override
     public void handleCommand(ChannelUID channelUID, Command command) {
-        @Nullable
-        OpenThermGatewayConnector conn = connector;
 
         logger.debug("Received command {} {}", channelUID, command);
 
@@ -104,25 +101,32 @@ public class OpenThermGatewayHandler extends BaseBridgeHandler implements OpenTh
                 gatewayCommand = GatewayCommand.parse(code, command.toFullString());
             }
 
-            if (conn != null && conn.isConnected()) {
-                conn.sendCommand(gatewayCommand);
+            sendCommand(gatewayCommand);
 
-                if (code == GatewayCommandCode.ControlSetpoint) {
-                    if (gatewayCommand.getMessage().equals("0.0")) {
-                        updateState(OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_CENTRAL_HEATING_WATER_SETPOINT,
-                                UnDefType.UNDEF);
-                    }
-                    updateState(OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_CENTRAL_HEATING_ENABLED,
-                            OnOffType.from(!gatewayCommand.getMessage().equals("0.0")));
-                } else if (code == GatewayCommandCode.ControlSetpoint2) {
-                    if (gatewayCommand.getMessage().equals("0.0")) {
-                        updateState(OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_CENTRAL_HEATING2_WATER_SETPOINT,
-                                UnDefType.UNDEF);
-                    }
-                    updateState(OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_CENTRAL_HEATING2_ENABLED,
-                            OnOffType.from(!gatewayCommand.getMessage().equals("0.0")));
+            if (code == GatewayCommandCode.ControlSetpoint) {
+                if (gatewayCommand.getMessage().equals("0.0")) {
+                    updateState(OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_CENTRAL_HEATING_WATER_SETPOINT,
+                            UnDefType.UNDEF);
                 }
+                updateState(OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_CENTRAL_HEATING_ENABLED,
+                        OnOffType.from(!gatewayCommand.getMessage().equals("0.0")));
+            } else if (code == GatewayCommandCode.ControlSetpoint2) {
+                if (gatewayCommand.getMessage().equals("0.0")) {
+                    updateState(OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_CENTRAL_HEATING2_WATER_SETPOINT,
+                            UnDefType.UNDEF);
+                }
+                updateState(OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_CENTRAL_HEATING2_ENABLED,
+                        OnOffType.from(!gatewayCommand.getMessage().equals("0.0")));
             }
+        }
+    }
+
+    public void sendCommand(GatewayCommand gatewayCommand) {
+        @Nullable
+        OpenThermGatewayConnector conn = connector;
+
+        if (conn != null && conn.isConnected()) {
+            conn.sendCommand(gatewayCommand);
         }
     }
 
@@ -246,6 +250,8 @@ public class OpenThermGatewayHandler extends BaseBridgeHandler implements OpenTh
                 return GatewayCommandCode.ControlSetpoint2;
             case OpenThermGatewayBindingConstants.CHANNEL_OVERRIDE_CENTRAL_HEATING2_ENABLED:
                 return GatewayCommandCode.CentralHeating2;
+            case OpenThermGatewayBindingConstants.CHANNEL_VH_VENTILATION_SETPOINT:
+                return GatewayCommandCode.VentilationSetpoint;
             case OpenThermGatewayBindingConstants.CHANNEL_SEND_COMMAND:
                 return null;
             default:

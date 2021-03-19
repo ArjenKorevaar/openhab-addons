@@ -46,7 +46,11 @@
 			<channel id="vh_nominalventrw" typeId="vh_nominalventrw"/>
 			<channel id="vh_nominalventilationvalue" typeId="vh_nominalventilationvalue"/>
 			<channel id="vh_tspnumber" typeId="vh_tspnumber"/>
-			<channel id="vh_tspentry" typeId="vh_tspentry"/>
+			<!-- tsp entry channels are created dynamically -->
+			<!-- <channel id="vh_tspentry" typeId="vh_tspentry"/> -->
+
+			<channel id="vh_ventilationsetpoint" typeId="vh_ventilationsetpoint"/>
 		</channels>
+		<config-description-ref uri="thing-type:openthermgateway:ventilationheatrecovery"/>
 	</thing-type>
 </thing:thing-descriptions>

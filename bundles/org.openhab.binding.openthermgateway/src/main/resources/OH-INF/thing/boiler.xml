@@ -47,6 +47,15 @@
 			<channel id="airpressfault" typeId="airpressfault"/>
 			<channel id="waterovtemp" typeId="waterovtemp"/>
 			<channel id="oemfaultcode" typeId="oemfaultcode"/>
+			<channel id="unsuccessfulburnerstarts" typeId="unsuccessfulburnerstarts"/>
+			<channel id="burnerstarts" typeId="burnerstarts"/>
+			<channel id="chpumpstarts" typeId="chpumpstarts"/>
+			<channel id="dhwpvstarts" typeId="dhwpvstarts"/>
+			<channel id="dhwburnerstarts" typeId="dhwburnerstarts"/>
+			<channel id="burnerhours" typeId="burnerhours"/>
+			<channel id="chpumphours" typeId="chpumphours"/>
+			<channel id="dhwpvhours" typeId="dhwpvhours"/>
+			<channel id="dhwburnerhours" typeId="dhwburnerhours"/>
 		</channels>
 	</thing-type>
 

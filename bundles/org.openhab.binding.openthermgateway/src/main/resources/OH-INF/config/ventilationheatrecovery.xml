@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config-description:config-descriptions
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:config-description="https://openhab.org/schemas/config-description/v1.0.0"
+	xsi:schemaLocation="https://openhab.org/schemas/config-description/v1.0.0 https://openhab.org/schemas/config-description-1.0.0.xsd">
+
+	<config-description uri="thing-type:openthermgateway:ventilationheatrecovery">
+		<parameter name="numberOfTSPs" type="integer" required="true" min="0" max="255" unit="s">
+			<label>Number of TSPs</label>
+			<description>The number of Transparent Slave Parameters.</description>
+			<default>75</default>
+		</parameter>
+
+		<parameter name="sendPMIntervals" type="text" required="false">
+			<label>Send PM Intervals</label>
+			<description>Comma separated list of priority message (PM) id's with the interval at wich the PM message is sent to
+				the OpenTherm Gataway.</description>
+			<default></default>
+		</parameter>
+
+	</config-description>
+
+</config-description:config-descriptions>

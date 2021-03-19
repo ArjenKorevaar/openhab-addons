@@ -12,18 +12,16 @@
  */
 package org.openhab.binding.openthermgateway.internal;
 
+import org.eclipse.jdt.annotation.NonNullByDefault;
+
 /**
- * The {@link DataType} enum indicates the type of data from a DataItem.
- * 
+ * The {@link VentilationHeatRecoveryConfiguration} class contains fields mapping thing configuration parameters.
+ *
  * @author Arjen Korevaar - Initial contribution
  */
-public enum DataType {
-    FLAGS,
-    UINT8,
-    INT8,
-    FLOAT,
-    UINT16,
-    INT16,
-    DOWTOD,
-    TSP
+@NonNullByDefault
+public class VentilationHeatRecoveryConfiguration {
+
+    public int numberOfTSPs = 75;
+    public String sendPMIntervals = "";
 }

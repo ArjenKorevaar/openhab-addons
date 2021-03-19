@@ -94,4 +94,5 @@ public class OpenThermGatewayBindingConstants {
     public static final String CHANNEL_VH_NOMINAL_VENTILATION_VALUE = "vh_nominalventilationvalue";
     public static final String CHANNEL_VH_TSP_NUMBER = "vh_tspnumber";
     public static final String CHANNEL_VH_TSP_ENTRY = "vh_tspentry";
+    public static final String CHANNEL_VH_VENTILATION_SETPOINT = "vh_ventilationsetpoint";
 }

@@ -12,11 +12,26 @@
  */
 package org.openhab.binding.openthermgateway.handler;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
-import org.openhab.binding.openthermgateway.OpenThermGatewayBindingConstants;
+import org.eclipse.jdt.annotation.Nullable;
+import org.openhab.binding.openthermgateway.internal.GatewayCommand;
+import org.openhab.binding.openthermgateway.internal.VentilationHeatRecoveryConfiguration;
+import org.openhab.core.thing.Bridge;
+import org.openhab.core.thing.Channel;
+import org.openhab.core.thing.ChannelUID;
 import org.openhab.core.thing.Thing;
+import org.openhab.core.thing.binding.ThingHandlerCallback;
+import org.openhab.core.thing.type.ChannelKind;
+import org.openhab.core.thing.type.ChannelTypeUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The {@link BaseDeviceHandler} is responsible for handling commands, which are
@@ -27,42 +42,119 @@ import org.openhab.core.thing.Thing;
 @NonNullByDefault
 public class VentilationHeatRecoveryHandler extends BaseDeviceHandler {
 
+    private final Logger logger = LoggerFactory.getLogger(VentilationHeatRecoveryHandler.class);
+
+    private @Nullable VentilationHeatRecoveryConfiguration config;
+    private @Nullable ScheduledFuture<?> sendPMJob;
+    private int sendPMJobTick = 0;
+
+    private Map<Integer, List<Integer>> sendPMIntervals = new HashMap<>();
+
     public VentilationHeatRecoveryHandler(Thing thing) {
         super(thing);
     }
 
     @Override
-    public boolean supportsChannelId(String channelId) {
-        return SUPPORTED_CHANNEL_IDS.contains(channelId);
+    public void initialize() {
+        super.initialize();
+
+        config = getConfigAs(VentilationHeatRecoveryConfiguration.class);
+
+        addTSPChannels();
+
+        initializePM();
     }
 
-    private static final Set<String> SUPPORTED_CHANNEL_IDS = Set.of(
-            OpenThermGatewayBindingConstants.CHANNEL_VH_VENTILATION_ENABLE,
-            OpenThermGatewayBindingConstants.CHANNEL_VH_BYPASS_POSITION,
-            OpenThermGatewayBindingConstants.CHANNEL_VH_BYPASS_MODE,
-            OpenThermGatewayBindingConstants.CHANNEL_VH_FREE_VENTILATION_MODE,
-            OpenThermGatewayBindingConstants.CHANNEL_VH_FAULT_INDICATION,
-            OpenThermGatewayBindingConstants.CHANNEL_VH_VENTILATION_MODE,
-            OpenThermGatewayBindingConstants.CHANNEL_VH_BYPASS_STATUS,
-            OpenThermGatewayBindingConstants.CHANNEL_VH_BYPASS_AUTOMATIC_STATUS,
-            OpenThermGatewayBindingConstants.CHANNEL_VH_FREE_VENTILATION_STATUS,
-            OpenThermGatewayBindingConstants.CHANNEL_VH_DIAGNOSTIC_INDICATION,
-            OpenThermGatewayBindingConstants.CHANNEL_VH_CONTROL_SETPOINT,
-            OpenThermGatewayBindingConstants.CHANNEL_VH_DIAGNOSTIC_CODE,
-            OpenThermGatewayBindingConstants.CHANNEL_VH_SYSTEM_TYPE, OpenThermGatewayBindingConstants.CHANNEL_VH_BYPASS,
-            OpenThermGatewayBindingConstants.CHANNEL_VH_SPEED_CONTROL,
-            OpenThermGatewayBindingConstants.CHANNEL_VH_MEMBER_ID,
-            OpenThermGatewayBindingConstants.CHANNEL_VH_OPENTHERM_VERSION,
-            OpenThermGatewayBindingConstants.CHANNEL_VH_VERSION_TYPE,
-            OpenThermGatewayBindingConstants.CHANNEL_VH_RELATIVE_VENTILATION,
-            OpenThermGatewayBindingConstants.CHANNEL_VH_CO2_LEVEL,
-            OpenThermGatewayBindingConstants.CHANNEL_VH_SUPPLY_INLET_TEMP,
-            OpenThermGatewayBindingConstants.CHANNEL_VH_SUPPLY_OUTLET_TEMP,
-            OpenThermGatewayBindingConstants.CHANNEL_VH_EXHAUST_INLET_TEMP,
-            OpenThermGatewayBindingConstants.CHANNEL_VH_EXHAUST_OUTLET_TEMP,
-            OpenThermGatewayBindingConstants.CHANNEL_VH_ACTUAL_EXHAUST_FAN_SPEED,
-            OpenThermGatewayBindingConstants.CHANNEL_VH_ACTUAL_INLET_FAN_SPEED,
-            OpenThermGatewayBindingConstants.CHANNEL_VH_NOMINAL_VENTILATION_VALUE,
-            OpenThermGatewayBindingConstants.CHANNEL_VH_TSP_NUMBER,
-            OpenThermGatewayBindingConstants.CHANNEL_VH_TSP_ENTRY);
+    private void addTSPChannels() {
+        @Nullable
+        VentilationHeatRecoveryConfiguration conf = config;
+
+        ThingHandlerCallback callback = getCallback();
+
+        if (conf != null && callback != null) {
+            ChannelTypeUID channelTypeUID = new ChannelTypeUID("openthermgateway", "vh_tspentry");
+
+            List<Channel> channels = new ArrayList<>();
+
+            channels.addAll(getThing().getChannels());
+
+            for (int index = 0; index < conf.numberOfTSPs; index++) {
+                String channelId = "vh_tspentry_" + index;
+                if (thing.getChannel(channelId) == null) {
+                    ChannelUID channelUID = new ChannelUID(thing.getUID(), channelId);
+
+                    channels.add(callback.createChannelBuilder(channelUID, channelTypeUID).withKind(ChannelKind.STATE)
+                            .withLabel("TSP Entry " + index).build());
+                }
+            }
+
+            updateThing(editThing().withChannels(channels).build());
+        }
+    }
+
+    private void initializePM() {
+
+        if (config != null) {
+            String[] parts = config.sendPMIntervals.split(",");
+
+            for (String part : parts) {
+                try {
+                    String[] elements = part.split("=");
+                    Integer messageId = Integer.parseInt(elements[0]);
+                    Integer interval = Integer.parseInt(elements[1]);
+
+                    if (!sendPMIntervals.containsKey(interval)) {
+                        sendPMIntervals.put(interval, new ArrayList<Integer>());
+                    }
+
+                    sendPMIntervals.get(interval).add(messageId);
+                } catch (NumberFormatException nfe) {
+                    logger.debug("Unable to parse sendPMIntervals value {}", part);
+                }
+            }
+        }
+
+        if (sendPMIntervals.size() > 0) {
+            logger.debug("Starting PM job");
+            sendPMJob = scheduler.scheduleAtFixedRate(this::sendPM, 10, 1, TimeUnit.SECONDS);
+        } else {
+            logger.debug("No PM intervals specified, skipping starting PM job");
+        }
+    }
+
+    public void sendPM() {
+        Bridge bridge = getBridge();
+
+        if (bridge != null) {
+            OpenThermGatewayHandler handler = (OpenThermGatewayHandler) bridge.getHandler();
+            if (handler != null) {
+                for (Integer interval : sendPMIntervals.keySet()) {
+                    if (sendPMJobTick >= interval && sendPMJobTick % interval == 0) {
+                        for (Integer messageid : sendPMIntervals.get(interval)) {
+                            GatewayCommand gatewayCommand = GatewayCommand.parse("PM", String.valueOf(messageid));
+                            handler.sendCommand(gatewayCommand);
+                        }
+                    }
+                }
+            }
+        }
+
+        sendPMJobTick++;
+
+        if (sendPMJobTick > 1800) {
+            // Reset sendPMJobTick every 30 minutes
+            sendPMJobTick = 0;
+        }
+    }
+
+    @Override
+    public void dispose() {
+        ScheduledFuture<?> job = sendPMJob;
+        if (job != null) {
+            job.cancel(true);
+            sendPMJob = null;
+        }
+
+        super.dispose();
+    }
 }

@@ -25,9 +25,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
-import org.openhab.core.library.types.DecimalType;
-import org.openhab.core.library.types.OnOffType;
-import org.openhab.core.types.State;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -177,36 +174,6 @@ public class OpenThermGatewaySocketConnector implements OpenThermGatewayConnecto
             return;
         } else {
             logger.trace("Received message: {}, {} {} {}", message, msg.getID(), msg.getCode(), msg.getMessageType());
-        }
-
-        if (DataItemGroup.dataItemGroups.containsKey(msg.getID())) {
-            DataItem[] dataItems = DataItemGroup.dataItemGroups.get(msg.getID());
-
-            for (DataItem dataItem : dataItems) {
-                State state = null;
-
-                switch (dataItem.getDataType()) {
-                    case FLAGS:
-                        state = OnOffType.from(msg.getBit(dataItem.getByteType(), dataItem.getBitPos()));
-                        break;
-                    case UINT8:
-                    case UINT16:
-                        state = new DecimalType(msg.getUInt(dataItem.getByteType()));
-                        break;
-                    case INT8:
-                    case INT16:
-                        state = new DecimalType(msg.getInt(dataItem.getByteType()));
-                        break;
-                    case FLOAT:
-                        state = new DecimalType(msg.getFloat());
-                        break;
-                    case DOWTOD:
-                        break;
-                }
-
-                logger.trace("  Data: {} {} {} {}", dataItem.getID(), dataItem.getSubject(), dataItem.getDataType(),
-                        state == null ? "" : state);
-            }
         }
 
         if (msg.getMessageType() == MessageType.READACK || msg.getMessageType() == MessageType.WRITEDATA
