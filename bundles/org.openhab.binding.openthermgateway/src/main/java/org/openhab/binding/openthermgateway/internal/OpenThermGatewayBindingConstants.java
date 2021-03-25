@@ -10,9 +10,12 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.openhab.binding.openthermgateway;
+package org.openhab.binding.openthermgateway.internal;
+
+import java.util.Set;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
+import org.openhab.core.thing.ThingTypeUID;
 
 /**
  * The {@link OpenThermGatewayBindingConstants} class defines common constants, which are
@@ -22,6 +25,18 @@ import org.eclipse.jdt.annotation.NonNullByDefault;
  */
 @NonNullByDefault
 public class OpenThermGatewayBindingConstants {
+
+    // Binding Id
+    public static final String BINDING_ID = "openthermgateway";
+
+    // List of all the ThingType UID's
+    public static final ThingTypeUID OPENTHERM_GATEWAY_THING_TYPE_UID = new ThingTypeUID(BINDING_ID,
+            "openthermgateway");
+    public static final ThingTypeUID BOILER_THING_TYPE_UID = new ThingTypeUID(BINDING_ID, "boiler");
+    public static final ThingTypeUID VH_THING_TYPE_UID = new ThingTypeUID(BINDING_ID, "ventilationheatrecovery");
+
+    public static final Set<ThingTypeUID> SUPPORTED_THING_TYPE_UIDS = Set.of(OPENTHERM_GATEWAY_THING_TYPE_UID,
+            BOILER_THING_TYPE_UID, VH_THING_TYPE_UID);
 
     // List of all Channel id's
     public static final String CHANNEL_SEND_COMMAND = "sendcommand";

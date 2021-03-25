@@ -12,6 +12,8 @@
  */
 package org.openhab.binding.openthermgateway.handler;
 
+import static org.openhab.binding.openthermgateway.internal.OpenThermGatewayBindingConstants.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -72,14 +74,14 @@ public class VentilationHeatRecoveryHandler extends BaseDeviceHandler {
         ThingHandlerCallback callback = getCallback();
 
         if (conf != null && callback != null) {
-            ChannelTypeUID channelTypeUID = new ChannelTypeUID("openthermgateway", "vh_tspentry");
+            ChannelTypeUID channelTypeUID = new ChannelTypeUID(BINDING_ID, "vh_tspentry");
 
             List<Channel> channels = new ArrayList<>();
 
             channels.addAll(getThing().getChannels());
 
             for (int index = 0; index < conf.numberOfTSPs; index++) {
-                String channelId = "vh_tspentry_" + index;
+                String channelId = CHANNEL_VH_TSP_ENTRY + "_" + index;
                 if (thing.getChannel(channelId) == null) {
                     ChannelUID channelUID = new ChannelUID(thing.getUID(), channelId);
 
@@ -93,10 +95,14 @@ public class VentilationHeatRecoveryHandler extends BaseDeviceHandler {
     }
 
     private void initializePM() {
+        @Nullable
+        VentilationHeatRecoveryConfiguration conf = config;
+
         sendPMIntervals.clear();
-        
-        if (config != null) {
-            String[] parts = config.sendPMIntervals.split(",");
+        stopPMJob();
+
+        if (conf != null) {
+            String[] parts = conf.sendPMIntervals.split(",");
 
             for (String part : parts) {
                 try {
@@ -108,7 +114,11 @@ public class VentilationHeatRecoveryHandler extends BaseDeviceHandler {
                         sendPMIntervals.put(interval, new ArrayList<Integer>());
                     }
 
-                    sendPMIntervals.get(interval).add(messageId);
+                    List<Integer> intervals = sendPMIntervals.get(interval);
+
+                    if (intervals != null) {
+                        intervals.add(messageId);
+                    }
                 } catch (NumberFormatException nfe) {
                     logger.debug("Unable to parse sendPMIntervals value {}", part);
                 }
@@ -131,9 +141,12 @@ public class VentilationHeatRecoveryHandler extends BaseDeviceHandler {
             if (handler != null) {
                 for (Integer interval : sendPMIntervals.keySet()) {
                     if (sendPMJobTick >= interval && sendPMJobTick % interval == 0) {
-                        for (Integer messageid : sendPMIntervals.get(interval)) {
-                            GatewayCommand gatewayCommand = GatewayCommand.parse("PM", String.valueOf(messageid));
-                            handler.sendCommand(gatewayCommand);
+                        List<Integer> intervals = sendPMIntervals.get(interval);
+                        if (intervals != null) {
+                            for (Integer messageid : intervals) {
+                                GatewayCommand gatewayCommand = GatewayCommand.parse("PM", String.valueOf(messageid));
+                                handler.sendCommand(gatewayCommand);
+                            }
                         }
                     }
                 }
@@ -148,14 +161,18 @@ public class VentilationHeatRecoveryHandler extends BaseDeviceHandler {
         }
     }
 
-    @Override
-    public void dispose() {
+    private void stopPMJob() {
         ScheduledFuture<?> job = sendPMJob;
         if (job != null) {
+            logger.debug("Stopping PM job");
             job.cancel(true);
             sendPMJob = null;
         }
+    }
 
+    @Override
+    public void dispose() {
+        stopPMJob();
         super.dispose();
     }
 }

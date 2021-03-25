@@ -12,6 +12,8 @@
  */
 package org.openhab.binding.openthermgateway.handler;
 
+import static org.openhab.binding.openthermgateway.internal.OpenThermGatewayBindingConstants.*;
+
 import javax.measure.Unit;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
@@ -87,59 +89,61 @@ public abstract class BaseDeviceHandler extends BaseThingHandler {
     public void receiveMessage(Message message) {
         DataItem[] dataItems = DataItemGroup.dataItemGroups.get(message.getID());
 
-        for (DataItem dataItem : dataItems) {
+        if (dataItems != null) {
+            for (DataItem dataItem : dataItems) {
 
-            String channelId = dataItem.getSubject();
-            DataType dataType = dataItem.getDataType();
+                String channelId = dataItem.getSubject();
+                DataType dataType = dataItem.getDataType();
 
-            if (dataType == DataType.TSP) {
-                // With TSPs, the channel index is HIGHBYTE, the value is LOWBYTE
-                int index = message.getUInt(ByteType.HIGHBYTE);
-                channelId = "vh_tspentry_" + index;
-            }
+                if (dataType == DataType.TSP) {
+                    // With TSPs, the channel index is HIGHBYTE, the value is LOWBYTE
+                    int index = message.getUInt(ByteType.HIGHBYTE);
+                    channelId = CHANNEL_VH_TSP_ENTRY + "_" + index;
+                }
 
-            if (thing.getChannel(channelId) == null) {
-                // Channel doesn't exist
-                return;
-            }
+                if (thing.getChannel(channelId) == null) {
+                    // Channel doesn't exist
+                    return;
+                }
 
-            if (dataItem.getFilteredCode() != null && dataItem.getFilteredCode() != message.getCode()) {
-                // Channel is not bound to the specific TRBA code
-                continue;
-            }
+                if (dataItem.getFilteredCode() != null && dataItem.getFilteredCode() != message.getCode()) {
+                    // Channel is not bound to the specific TRBA code
+                    continue;
+                }
 
-            State state = null;
+                State state = null;
 
-            switch (dataItem.getDataType()) {
-                case FLAGS:
-                    state = OnOffType.from(message.getBit(dataItem.getByteType(), dataItem.getBitPos()));
-                    break;
-                case UINT8:
-                case UINT16:
-                    state = new DecimalType(message.getUInt(dataItem.getByteType()));
-                    break;
-                case INT8:
-                case INT16:
-                    state = new DecimalType(message.getInt(dataItem.getByteType()));
-                    break;
-                case TSP:
-                    // With TSPs, the index is HIGHBYTE, the value is LOWBYTE
-                    // TSP values are treated as Number:Dimensionless
-                    state = new DecimalType(message.getUInt(ByteType.LOWBYTE));
-                    break;
-                case FLOAT:
-                    float value = message.getFloat();
-                    @Nullable
-                    Unit<?> unit = dataItem.getUnit();
-                    state = (unit == null) ? new DecimalType(value) : new QuantityType<>(value, unit);
-                    break;
-                case DOWTOD:
-                    break;
-            }
+                switch (dataItem.getDataType()) {
+                    case FLAGS:
+                        state = OnOffType.from(message.getBit(dataItem.getByteType(), dataItem.getBitPos()));
+                        break;
+                    case UINT8:
+                    case UINT16:
+                        state = new DecimalType(message.getUInt(dataItem.getByteType()));
+                        break;
+                    case INT8:
+                    case INT16:
+                        state = new DecimalType(message.getInt(dataItem.getByteType()));
+                        break;
+                    case TSP:
+                        // With TSPs, the index is HIGHBYTE, the value is LOWBYTE
+                        // TSP values are treated as Number:Dimensionless
+                        state = new DecimalType(message.getUInt(ByteType.LOWBYTE));
+                        break;
+                    case FLOAT:
+                        float value = message.getFloat();
+                        @Nullable
+                        Unit<?> unit = dataItem.getUnit();
+                        state = (unit == null) ? new DecimalType(value) : new QuantityType<>(value, unit);
+                        break;
+                    case DOWTOD:
+                        break;
+                }
 
-            if (state != null) {
-                logger.debug("Received update for channel '{}': {}", channelId, state);
-                updateState(channelId, state);
+                if (state != null) {
+                    logger.debug("Received update for channel '{}': {}", channelId, state);
+                    updateState(channelId, state);
+                }
             }
         }
     }
