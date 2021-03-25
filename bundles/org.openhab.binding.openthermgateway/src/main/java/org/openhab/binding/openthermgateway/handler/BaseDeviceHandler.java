@@ -95,7 +95,7 @@ public abstract class BaseDeviceHandler extends BaseThingHandler {
             if (dataType == DataType.TSP) {
                 // With TSPs, the channel index is HIGHBYTE, the value is LOWBYTE
                 int index = message.getUInt(ByteType.HIGHBYTE);
-                channelId = "tsp_entry_" + index;
+                channelId = "vh_tspentry_" + index;
             }
 
             if (thing.getChannel(channelId) == null) {
