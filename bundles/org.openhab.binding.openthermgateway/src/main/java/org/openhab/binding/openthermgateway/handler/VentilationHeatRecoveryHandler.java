@@ -93,7 +93,8 @@ public class VentilationHeatRecoveryHandler extends BaseDeviceHandler {
     }
 
     private void initializePM() {
-
+        sendPMIntervals.clear();
+        
         if (config != null) {
             String[] parts = config.sendPMIntervals.split(",");
 

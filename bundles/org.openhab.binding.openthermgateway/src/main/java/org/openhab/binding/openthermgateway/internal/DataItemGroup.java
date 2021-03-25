@@ -218,7 +218,7 @@ public class DataItemGroup {
         g.put(87, new DataItem[] {
                 new DataItem(87, Msg.READ, ByteType.HIGHBYTE, DataType.UINT8, 0, "vh_nominalventilationvalue") });
         g.put(88, new DataItem[] { new DataItem(88, Msg.READ, ByteType.HIGHBYTE, DataType.UINT8, 0, "vh_tspnumber") });
-        g.put(89, new DataItem[] { new DataItem(89, Msg.READ, ByteType.BOTH, DataType.UINT16, 0, "vh_tspentry") });
+        g.put(89, new DataItem[] { new DataItem(89, Msg.READ, ByteType.BOTH, DataType.TSP, 0, "vh_tspentry") });
         g.put(100,
                 new DataItem[] { new DataItem(100, Msg.READ, ByteType.HIGHBYTE, DataType.FLAGS, 0, "rof0"),
                         new DataItem(100, Msg.READ, ByteType.HIGHBYTE, DataType.FLAGS, 1, "rof1"),

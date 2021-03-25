@@ -36,15 +36,15 @@ import org.osgi.service.component.annotations.Component;
 @Component(service = ThingHandlerFactory.class, configurationPid = "binding.openthermgateway")
 @NonNullByDefault
 public class OpenThermGatewayHandlerFactory extends BaseThingHandlerFactory {
+
     private static final String BINDING_ID = "openthermgateway";
 
-    // List of all Thing Type UID's
-    public static final ThingTypeUID OPENTHERM_GATEWAY_THING_TYPE_UID = new ThingTypeUID(BINDING_ID,
+    private static final ThingTypeUID OPENTHERM_GATEWAY_THING_TYPE_UID = new ThingTypeUID(BINDING_ID,
             "openthermgateway");
-    public static final ThingTypeUID BOILER_THING_TYPE_UID = new ThingTypeUID(BINDING_ID, "boiler");
-    public static final ThingTypeUID VH_THING_TYPE_UID = new ThingTypeUID(BINDING_ID, "ventilationheatrecovery");
+    private static final ThingTypeUID BOILER_THING_TYPE_UID = new ThingTypeUID(BINDING_ID, "boiler");
+    private static final ThingTypeUID VH_THING_TYPE_UID = new ThingTypeUID(BINDING_ID, "ventilationheatrecovery");
 
-    public static final Set<ThingTypeUID> SUPPORTED_THING_TYPE_UIDS = Set.of(OPENTHERM_GATEWAY_THING_TYPE_UID,
+    private static final Set<ThingTypeUID> SUPPORTED_THING_TYPE_UIDS = Set.of(OPENTHERM_GATEWAY_THING_TYPE_UID,
             BOILER_THING_TYPE_UID, VH_THING_TYPE_UID);
 
     @Override

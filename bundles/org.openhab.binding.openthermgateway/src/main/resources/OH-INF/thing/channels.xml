@@ -4,6 +4,17 @@
 	xmlns:thing="https://openhab.org/schemas/thing-description/v1.0.0"
 	xsi:schemaLocation="https://openhab.org/schemas/thing-description/v1.0.0 https://openhab.org/schemas/thing-description-1.0.0.xsd">
 
+	<!-- openthermgateway -->
+
+	<channel-type id="sendcommand">
+		<item-type>String</item-type>
+		<label>Send Command</label>
+		<description>Channel to send commands to the OpenTherm Gateway device</description>
+		<state readOnly="false"/>
+	</channel-type>
+
+	<!-- boiler -->
+
 	<channel-type id="roomtemp">
 		<item-type>Number:Temperature</item-type>
 		<label>Room Temperature</label>
@@ -349,7 +360,7 @@
 		<state readOnly="true"/>
 	</channel-type>
 
-
+	<!-- ventilationheatrecovery -->
 
 	<channel-type id="vh_ventilationenable">
 		<item-type>Switch</item-type>
@@ -645,14 +656,6 @@
 		<label>Ventilation Setpoint</label>
 		<description>Ventilation setpoint override</description>
 		<state readOnly="false" min="0" max="100" step="1"/>
-	</channel-type>
-
-
-	<channel-type id="sendcommand">
-		<item-type>String</item-type>
-		<label>Send Command</label>
-		<description>Channel to send commands to the OpenTherm Gateway device</description>
-		<state readOnly="false"/>
 	</channel-type>
 
 </thing:thing-descriptions>
